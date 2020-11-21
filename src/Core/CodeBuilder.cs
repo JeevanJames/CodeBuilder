@@ -67,6 +67,12 @@ namespace CodeBuilder.Core
             return this;
         }
 
+        public CodeBuilder Line(Func<string> lineBuilder)
+        {
+            string line = lineBuilder();
+            return Line(line, line is not null);
+        }
+
         public CodeBuilder Repeat<T>(IEnumerable<T> collection, Action<CodeBuilder, T> action)
         {
             foreach (T item in collection)

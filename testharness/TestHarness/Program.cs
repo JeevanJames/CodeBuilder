@@ -1,4 +1,6 @@
-﻿using CodeBuilder.Core;
+﻿using System;
+
+using CodeBuilder.Core;
 using CodeBuilder.Core.CSharp;
 
 using static System.Console;
@@ -24,6 +26,14 @@ namespace TestHarness
                         .Blank
                         .Block("public MyClass(string value)")
                             .Line("_value = value;")
+                        .EndBlock()
+                        .Blank
+                        .Block("public void DoSomething()")
+                            .Try()
+                                .Line("WriteLine(_value);")
+                            .Catch<Exception>("ex")
+                                .Line("WriteLine(ex.Message);")
+                            .EndTry()
                         .EndBlock()
                     .EndBlock()
                 .EndBlock()
