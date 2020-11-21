@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <RootNamespace>CodeBuilder.Core</RootNamespace>
+        <RootNamespace>NCodeBuilder</RootNamespace>
         <AssemblyName>$(RootNamespace)</AssemblyName>
         <LangVersion>9.0</LangVersion>
         <Nullable>enable</Nullable>

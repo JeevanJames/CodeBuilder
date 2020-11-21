@@ -1,4 +1,5 @@
-﻿#region --- License & Copyright Notice ---
+extensions: .cs
+#region --- License & Copyright Notice ---
 /*
 CodeBuilder
 Copyright (c) 2019-20 Jeevan James
@@ -17,16 +18,3 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 #endregion
-
-using NCodeBuilder.CLanguageFamily;
-
-namespace NCodeBuilder.CSharp
-{
-    public class CSharpLanguageProvider : CLanguageFamilyProvider
-    {
-        public CSharpLanguageProvider()
-            : base(CLanguageBraceStyle.AllmanBSD)
-        {
-        }
-    }
-}

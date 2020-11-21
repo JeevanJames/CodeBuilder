@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>CodeBuilder.Core</name>
+        <name>NCodeBuilder</name>
     </assembly>
     <members>
-        <member name="T:CodeBuilder.Core.CodeLine">
+        <member name="T:NCodeBuilder.CodeLine">
             <summary>
                 Represents a line of code, either as a string value or a factory that dynamically creates
                 the code.
