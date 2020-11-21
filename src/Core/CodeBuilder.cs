@@ -38,6 +38,8 @@ namespace NCodeBuilder
         private readonly StringBuilder _builder = new();
         private readonly LanguageProvider _language;
         private readonly Stack<string?> _blockStack = new();
+        private readonly Stack<bool> _sectionStack = new();
+        private bool _canEmit = true;
         private int _indentLevel = 0;
 
         /// <summary>
@@ -63,6 +65,9 @@ namespace NCodeBuilder
         {
             get
             {
+                if (!_canEmit)
+                    return this;
+
                 _builder.AppendLine();
                 return this;
             }
@@ -75,6 +80,9 @@ namespace NCodeBuilder
         {
             get
             {
+                if (!_canEmit)
+                    return this;
+
                 _indentLevel++;
                 return this;
             }
@@ -90,6 +98,9 @@ namespace NCodeBuilder
         {
             get
             {
+                if (!_canEmit)
+                    return this;
+
                 if (_indentLevel == 0)
                     throw new InvalidOperationException("Cannot decrease indent level below zero.");
                 _indentLevel--;
@@ -111,6 +122,9 @@ namespace NCodeBuilder
         /// </returns>
         public CodeBuilder Line(CodeLine code)
         {
+            if (!_canEmit)
+                return this;
+
             string? line = code.ToString();
             if (line is null)
                 return this;
@@ -137,6 +151,9 @@ namespace NCodeBuilder
         /// </returns>
         public CodeBuilder Line(CodeLine code, Func<bool> predicate)
         {
+            if (!_canEmit)
+                return this;
+
             if (predicate())
                 Line(code);
             return this;
@@ -158,6 +175,9 @@ namespace NCodeBuilder
         /// </returns>
         public CodeBuilder Line(CodeLine code, bool condition)
         {
+            if (!_canEmit)
+                return this;
+
             if (condition)
                 Line(code);
             return this;
@@ -178,6 +198,9 @@ namespace NCodeBuilder
         /// </returns>
         public CodeBuilder Repeat<T>(IEnumerable<T> collection, Action<CodeBuilder, T> action)
         {
+            if (!_canEmit)
+                return this;
+
             foreach (T item in collection)
                 action(this, item);
             return this;
@@ -199,6 +222,9 @@ namespace NCodeBuilder
         /// </returns>
         public CodeBuilder Repeat<T>(IEnumerable<T> collection, Action<CodeBuilder, T, int> action)
         {
+            if (!_canEmit)
+                return this;
+
             int index = 0;
             foreach (T item in collection)
             {
@@ -222,6 +248,9 @@ namespace NCodeBuilder
         /// </returns>
         public CodeBuilder Iterate(object obj, Action<CodeBuilder, string, object> action)
         {
+            if (!_canEmit)
+                return this;
+
             if (obj is null)
                 return this;
 
@@ -256,6 +285,9 @@ namespace NCodeBuilder
         /// </returns>
         public CodeBuilder Block(CodeLine? code = null, string? context = null)
         {
+            if (!_canEmit)
+                return this;
+
             _blockStack.Push(context);
             _language.StartBlockBuilder(this, code);
             return this;
@@ -280,12 +312,63 @@ namespace NCodeBuilder
         /// </exception>
         public CodeBuilder EndBlock(string? context = null)
         {
+            if (!_canEmit)
+                return this;
+
             if (_blockStack.Count == 0)
                 throw new InvalidOperationException("No more blocks to end.");
             string? poppedContext = _blockStack.Pop();
             if (!string.Equals(context, poppedContext, StringComparison.Ordinal))
                 throw new InvalidOperationException($"Current block being ended '{poppedContext ?? "[NULL]"}' does match the requested context '{context ?? "[NULL]"}'.");
             _language.EndBlockBuilder(this);
+            return this;
+        }
+
+        /// <summary>
+        ///     Starts a conditional section, where all subsequent code is generated only if the
+        ///     specified <paramref name="condition"/> is <c>true</c>, until the
+        ///     <see cref="EndSection"/> method is called.
+        /// </summary>
+        /// <param name="condition">The condition to check.</param>
+        /// <returns>
+        ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
+        /// </returns>
+        public CodeBuilder Section(bool condition)
+        {
+            _sectionStack.Push(condition);
+            _canEmit = _sectionStack.All(s => s);
+            return this;
+        }
+
+        /// <summary>
+        ///     Starts a conditional section, where all subsequent code is generated only if the
+        ///     specified <paramref name="predicate"/> delegate returns <c>true</c>, until the
+        ///     <see cref="EndSection"/> method is called.
+        /// </summary>
+        /// <param name="predicate">The predicate to check.</param>
+        /// <returns>
+        ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
+        /// </returns>
+        public CodeBuilder Section(Func<bool> predicate)
+        {
+            _sectionStack.Push(predicate());
+            _canEmit = _sectionStack.All(s => s);
+            return this;
+        }
+
+        /// <summary>
+        ///     Ends a condition section started with the <see cref="Section(bool)"/> or
+        ///     <see cref="Section(Func{bool})"/> methods.
+        /// </summary>
+        /// <returns>
+        ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
+        /// </returns>
+        public CodeBuilder EndSection()
+        {
+            if (_sectionStack.Count == 0)
+                throw new InvalidOperationException("No more sections to end.");
+            _sectionStack.Pop();
+            _canEmit = _sectionStack.Count == 0 || _sectionStack.All(s => s);
             return this;
         }
 
@@ -299,6 +382,9 @@ namespace NCodeBuilder
         /// </returns>
         public CodeBuilder Comment(params CodeLine[] comments)
         {
+            if (!_canEmit)
+                return this;
+
             foreach (CodeLine comment in comments)
                 _language.CommentBuilder(this, comment);
             return this;
@@ -314,6 +400,9 @@ namespace NCodeBuilder
         /// </returns>
         public CodeBuilder Comment(IEnumerable<CodeLine> comments)
         {
+            if (!_canEmit)
+                return this;
+
             foreach (CodeLine comment in comments)
                 _language.CommentBuilder(this, comment);
             return this;
@@ -330,6 +419,9 @@ namespace NCodeBuilder
         /// </returns>
         public CodeBuilder MultiLineComment(params CodeLine[] comments)
         {
+            if (!_canEmit)
+                return this;
+
             _language.MultiLineCommentBuilder(this, comments);
             return this;
         }
@@ -345,6 +437,9 @@ namespace NCodeBuilder
         /// </returns>
         public CodeBuilder MultiLineComment(IEnumerable<CodeLine> comments)
         {
+            if (!_canEmit)
+                return this;
+
             _language.MultiLineCommentBuilder(this, comments);
             return this;
         }

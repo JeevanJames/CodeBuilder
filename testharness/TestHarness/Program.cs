@@ -48,15 +48,19 @@ namespace TestHarness
                         .Block("public MyClass(string value)")
                             .Line("_value = value;")
                         .EndBlock()
+                        .Section(() => false)
                         .Blank
                         .Block("public void DoSomething()")
                             .Try()
                                 .Line("WriteLine(_value);")
                             .Catch<Exception>("ex")
+                                .Section(true)
                                 .Comment((CodeFactory)(() => $"Error at {DateTime.Now:f}"))
                                 .Line("WriteLine(ex.Message);")
+                                .EndSection()
                             .EndTry()
                         .EndBlock()
+                        .EndSection()
                     .EndBlock()
                 .EndNamespace();
 
