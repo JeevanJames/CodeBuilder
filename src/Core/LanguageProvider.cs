@@ -77,14 +77,12 @@ namespace NCodeBuilder
         /// <summary>
         ///     Gets or sets the delegate that is used to start a code block in the code.
         /// </summary>
-        public Action<CodeBuilder, CodeLine?> StartBlockBuilder { get; set; }
-            = (_, _) => throw new InvalidOperationException("Current language provider does not provide a start block builder.");
+        public Action<CodeBuilder, CodeLine?> StartBlockBuilder { get; set; } = (cb, line) => _ = cb.Indent;
 
         /// <summary>
         ///     Gets or sets the delegate that is used to end a code block in the code.
         /// </summary>
-        public Action<CodeBuilder> EndBlockBuilder { get; set; }
-            = _ => throw new InvalidOperationException("Current language provider does not provide an end block builder.");
+        public Action<CodeBuilder> EndBlockBuilder { get; set; } = cb => _ = cb.Unindent;
 
         /// <summary>
         ///     A <see cref="LanguageProvider"/> that does not represent any language. In other words, a
@@ -95,8 +93,6 @@ namespace NCodeBuilder
         public static readonly LanguageProvider NoLanguage = new LanguageProvider("No Language")
         {
             CommentBuilder = (_, _) => { },
-            StartBlockBuilder = (_, _) => { },
-            EndBlockBuilder = _ => { },
         };
 
         /// <summary>
