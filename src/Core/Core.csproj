@@ -1,23 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>CodeBuilder.Core</AssemblyName>
-    <RootNamespace>CodeBuilder.Core</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>CodeBuilder.Core</RootNamespace>
+        <AssemblyName>$(RootNamespace)</AssemblyName>
+        <LangVersion>9.0</LangVersion>
+        <Nullable>enable</Nullable>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;1591</NoWarn>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-    <DocumentationFile>D:\Code\GitHub\CodeBuilder\src\Core\CodeBuilder.Core.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>1701;1702;1591</NoWarn>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-    <DocumentationFile>D:\Code\GitHub\CodeBuilder\src\Core\CodeBuilder.Core.xml</DocumentationFile>
-  </PropertyGroup>
+        <NoWarn>1701;1702;1591</NoWarn>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <WarningsAsErrors />
+        <DocumentationFile>Properties\$(AssemblyName).xml</DocumentationFile>
+    </PropertyGroup>
 
 </Project>

@@ -4,38 +4,52 @@ using System.Text;
 
 namespace CodeBuilder.Core
 {
-    public class CodeBuilder
+    public sealed class CodeBuilder
     {
+        private readonly StringBuilder _builder = new StringBuilder();
+        private readonly LanguageProvider _language;
         private int _indentLevel = 0;
 
-        protected StringBuilder Builder { get; } = new StringBuilder();
-
-        public CodeBuilder Blank()
+        public CodeBuilder(LanguageProvider language)
         {
-            Builder.AppendLine();
-            return this;
+            _language = language;
         }
 
-        public CodeBuilder Indent()
+        public CodeBuilder Blank
         {
-            _indentLevel++;
-            return this;
+            get
+            {
+                _builder.AppendLine();
+                return this;
+            }
         }
 
-        public CodeBuilder Unindent()
+        public CodeBuilder Indent
         {
-            if (_indentLevel == 0)
-                throw new InvalidOperationException("Cannot decrease indent level below zero.");
-            _indentLevel--;
-            return this;
+            get
+            {
+                _indentLevel++;
+                return this;
+            }
+        }
+
+        public CodeBuilder Unindent
+        {
+            get
+            {
+                if (_indentLevel == 0)
+                    throw new InvalidOperationException("Cannot decrease indent level below zero.");
+                _indentLevel--;
+                return this;
+            }
         }
 
         public CodeBuilder Line(string code)
         {
             if (_indentLevel == 0)
-                Builder.AppendLine(code);
+                _builder.AppendLine(code);
             else
-                Builder.AppendLine($"{new string(' ', _indentLevel * 4)}{code}");
+                _builder.AppendLine($"{GetIndent()}{code}");
             return this;
         }
 
@@ -71,9 +85,52 @@ namespace CodeBuilder.Core
             return this;
         }
 
+        public CodeBuilder Block(string? code = null)
+        {
+            _language.StartBlockBuilder(this, code);
+            return this;
+        }
+
+        public CodeBuilder EndBlock()
+        {
+            _language.EndBlockBuilder(this);
+            return this;
+        }
+
+        public CodeBuilder Comment(params string[] comments)
+        {
+            foreach (string comment in comments)
+                _language.CommentBuilder(this, comment);
+            return this;
+        }
+
+        public CodeBuilder Comment(IEnumerable<string> comments)
+        {
+            foreach (string comment in comments)
+                _language.CommentBuilder(this, comment);
+            return this;
+        }
+
+        public CodeBuilder MultiLineComment(params string[] comments)
+        {
+            _language.MultiLineCommentBuilder(this, comments);
+            return this;
+        }
+
+        public CodeBuilder MultiLineComment(IEnumerable<string> comments)
+        {
+            _language.MultiLineCommentBuilder(this, comments);
+            return this;
+        }
+
         public override string ToString()
         {
-            return Builder.ToString();
+            return _builder.ToString();
+        }
+
+        private string GetIndent()
+        {
+            return new string(' ', _indentLevel * _language.IndentSize);
         }
     }
 }
