@@ -61,5 +61,9 @@ namespace NCodeBuilder
         }
     }
 
+    /// <summary>
+    ///     Delegate that can be used to dynamically construct a line of code. Equivalent to a
+    ///     <c>Func&lt;string&gt;</c>
+    /// </summary>
     public delegate string CodeFactory();
 }

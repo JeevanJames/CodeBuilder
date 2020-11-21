@@ -20,22 +20,43 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace NCodeBuilder
 {
+    /// <summary>
+    ///     Generates code by concatenating smaller code blocks.
+    ///     <para/>
+    ///     Similar to a <see cref="StringBuilder"/>, but with code-specific methods.
+    /// </summary>
+    [DebuggerDisplay("Code Builder for {_language.Name}")]
     public sealed class CodeBuilder
     {
-        private readonly StringBuilder _builder = new StringBuilder();
+        private readonly StringBuilder _builder = new();
         private readonly LanguageProvider _language;
-        private readonly Stack<string?> _blockStack = new Stack<string?>();
+        private readonly Stack<string?> _blockStack = new();
         private int _indentLevel = 0;
 
-        public CodeBuilder(LanguageProvider language)
+        /// <summary>
+        ///     Initializes an instance of the <see cref="CodeBuilder"/> class with the specific
+        ///     <paramref name="language"/> provider.
+        /// </summary>
+        /// <param name="language">
+        ///     A <see cref="LanguageProvider"/> that provides language-specific code generation
+        ///     enhancements.
+        ///     <para/>
+        ///     If not specified, then the <see cref="LanguageProvider.NoLanguage"/> provider is used,
+        ///     which does not provide any language enhancements.
+        /// </param>
+        public CodeBuilder(LanguageProvider? language = null)
         {
-            _language = language;
+            _language = language ?? LanguageProvider.NoLanguage;
         }
 
+        /// <summary>
+        ///     Adds a blank line.
+        /// </summary>
         public CodeBuilder Blank
         {
             get
@@ -45,6 +66,9 @@ namespace NCodeBuilder
             }
         }
 
+        /// <summary>
+        ///     Indents the code by a level.
+        /// </summary>
         public CodeBuilder Indent
         {
             get
@@ -54,6 +78,12 @@ namespace NCodeBuilder
             }
         }
 
+        /// <summary>
+        ///     Unindents the code by a level.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        ///     Thrown if an attempt is made to unindent below 0.
+        /// </exception>
         public CodeBuilder Unindent
         {
             get
@@ -65,6 +95,18 @@ namespace NCodeBuilder
             }
         }
 
+        /// <summary>
+        ///     Adds a line of <paramref name="code"/>. If the code is <c>null</c>, nothing is added.
+        /// </summary>
+        /// <param name="code">
+        ///     The code line to add.
+        ///     <para/>
+        ///     This can either be a <see cref="string"/> or a factory delegate
+        ///     (<see cref="CodeFactory"/>) that returns a string.
+        /// </param>
+        /// <returns>
+        ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
+        /// </returns>
         public CodeBuilder Line(CodeLine code)
         {
             string? line = code.ToString();
@@ -77,6 +119,20 @@ namespace NCodeBuilder
             return this;
         }
 
+        /// <summary>
+        ///     Adds a line of <paramref name="code"/> if the specified <paramref name="predicate"/> is
+        ///     <c>true</c>.
+        /// </summary>
+        /// <param name="code">
+        ///     The code line to add.
+        ///     <para/>
+        ///     This can either be a <see cref="string"/> or a factory delegate
+        ///     (<see cref="CodeFactory"/>) that returns a string.
+        /// </param>
+        /// <param name="predicate">The predicate to test.</param>
+        /// <returns>
+        ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
+        /// </returns>
         public CodeBuilder Line(CodeLine code, Func<bool> predicate)
         {
             if (predicate())
@@ -84,6 +140,20 @@ namespace NCodeBuilder
             return this;
         }
 
+        /// <summary>
+        ///     Adds a line of <paramref name="code"/> if the specified <paramref name="condition"/> is
+        ///     <c>true</c>.
+        /// </summary>
+        /// <param name="code">
+        ///     The code line to add.
+        ///     <para/>
+        ///     This can either be a <see cref="string"/> or a factory delegate
+        ///     (<see cref="CodeFactory"/>) that returns a string.
+        /// </param>
+        /// <param name="condition">The condition to test.</param>
+        /// <returns>
+        ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
+        /// </returns>
         public CodeBuilder Line(CodeLine code, bool condition)
         {
             if (condition)
@@ -91,6 +161,19 @@ namespace NCodeBuilder
             return this;
         }
 
+        /// <summary>
+        ///     Iterates over a <paramref name="collection"/> and executes the specified
+        ///     <paramref name="action"/> on each item.
+        /// </summary>
+        /// <typeparam name="T">The type of item in the <paramref name="collection"/>.</typeparam>
+        /// <param name="collection">The collection to iterate over.</param>
+        /// <param name="action">
+        ///     The action to execute. This action accepts two parameters - the
+        ///     <see cref="CodeBuilder"/> instance and the item itself.
+        /// </param>
+        /// <returns>
+        ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
+        /// </returns>
         public CodeBuilder Repeat<T>(IEnumerable<T> collection, Action<CodeBuilder, T> action)
         {
             foreach (T item in collection)
@@ -98,17 +181,52 @@ namespace NCodeBuilder
             return this;
         }
 
+        /// <summary>
+        ///     Iterates over a <paramref name="collection"/> and executes the specified
+        ///     <paramref name="action"/> on each item.
+        /// </summary>
+        /// <typeparam name="T">The type of item in the <paramref name="collection"/>.</typeparam>
+        /// <param name="collection">The collection to iterate over.</param>
+        /// <param name="action">
+        ///     The action to execute. This action accepts three parameters - the
+        ///     <see cref="CodeBuilder"/> instance, the item itself and the index of the item in the
+        ///     collection.
+        /// </param>
+        /// <returns>
+        ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
+        /// </returns>
         public CodeBuilder Repeat<T>(IEnumerable<T> collection, Action<CodeBuilder, T, int> action)
         {
-            int counter = 0;
+            int index = 0;
             foreach (T item in collection)
             {
-                action(this, item, counter);
-                counter++;
+                action(this, item, index);
+                index++;
             }
             return this;
         }
 
+        /// <summary>
+        ///     Starts a new code block. This is language-specific and what exactly happens depends on
+        ///     the implementation in the underlying language provider.
+        /// </summary>
+        /// <param name="code">
+        ///     Optional code associated with the code block. Some languages may need this.
+        ///     <para/>
+        ///     For example, in C#, an <c>if</c> block needs to specify the condition to check before
+        ///     starting the block.
+        ///     <para/>
+        ///     This can either be a <see cref="string"/> or a factory delegate
+        ///     (<see cref="CodeFactory"/>) that returns a string.
+        /// </param>
+        /// <param name="context">
+        ///     An optional name for the block, which can be checked when the
+        ///     <see cref="EndBlock(string?)"/> method is called to close the block to ensure that the
+        ///     correct block is being closed.
+        /// </param>
+        /// <returns>
+        ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
+        /// </returns>
         public CodeBuilder Block(CodeLine? code = null, string? context = null)
         {
             _blockStack.Push(context);
@@ -116,6 +234,23 @@ namespace NCodeBuilder
             return this;
         }
 
+        /// <summary>
+        ///     Closes an existing code block created using the <see cref="Block(CodeLine?, string?)"/>
+        ///     method. This is language-specific and what exactly happens depends on the implementation
+        ///     in the underlying language provider.
+        /// </summary>
+        /// <param name="context">
+        ///     An optional name for the block, which needs to match against the name specified in the
+        ///     <see cref="Block"/> method. This will ensure that this method is closing the correct
+        ///     block.
+        /// </param>
+        /// <returns>
+        ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        ///     Thrown if the method is called without aexisting block, or if the specified
+        ///     <paramref name="context"/> does not match the block's context.
+        /// </exception>
         public CodeBuilder EndBlock(string? context = null)
         {
             if (_blockStack.Count == 0)
@@ -127,6 +262,14 @@ namespace NCodeBuilder
             return this;
         }
 
+        /// <summary>
+        ///     Adds one or more single line comments. This is language-specific and what exactly
+        ///     happens depends on the implementation in the underlying language provider.
+        /// </summary>
+        /// <param name="comments">The single line comments to add.</param>
+        /// <returns>
+        ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
+        /// </returns>
         public CodeBuilder Comment(params CodeLine[] comments)
         {
             foreach (CodeLine comment in comments)
@@ -134,6 +277,14 @@ namespace NCodeBuilder
             return this;
         }
 
+        /// <summary>
+        ///     Adds one or more single line comments. This is language-specific and what exactly
+        ///     happens depends on the implementation in the underlying language provider.
+        /// </summary>
+        /// <param name="comments">The single line comments to add.</param>
+        /// <returns>
+        ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
+        /// </returns>
         public CodeBuilder Comment(IEnumerable<CodeLine> comments)
         {
             foreach (CodeLine comment in comments)
@@ -141,18 +292,40 @@ namespace NCodeBuilder
             return this;
         }
 
+        /// <summary>
+        ///     Adds a multi-line comment with the specified <paramref name="comments"/> lines. This is
+        ///     language-specific and what exactly happens depends on the implementation in the
+        ///     underlying language provider.
+        /// </summary>
+        /// <param name="comments">The lines to add in the multi-line comment.</param>
+        /// <returns>
+        ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
+        /// </returns>
         public CodeBuilder MultiLineComment(params CodeLine[] comments)
         {
             _language.MultiLineCommentBuilder(this, comments);
             return this;
         }
 
+        /// <summary>
+        ///     Adds a multi-line comment with the specified <paramref name="comments"/> lines. This is
+        ///     language-specific and what exactly happens depends on the implementation in the
+        ///     underlying language provider.
+        /// </summary>
+        /// <param name="comments">The lines to add in the multi-line comment.</param>
+        /// <returns>
+        ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
+        /// </returns>
         public CodeBuilder MultiLineComment(IEnumerable<CodeLine> comments)
         {
             _language.MultiLineCommentBuilder(this, comments);
             return this;
         }
 
+        /// <summary>
+        ///     Generates the code.
+        /// </summary>
+        /// <returns>The code.</returns>
         public override string ToString()
         {
             return _builder.ToString();
@@ -160,7 +333,10 @@ namespace NCodeBuilder
 
         private string GetIndent()
         {
-            return new string(' ', _indentLevel * _language.IndentSize);
+            // As an optimization, we call string.Intern to ensure that the same string instances are
+            // used for the same indentation levels. This is because new string() creates a separate
+            // instance of the same indent string.
+            return string.Intern(new string(' ', _indentLevel * _language.IndentSize));
         }
     }
 }

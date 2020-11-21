@@ -25,7 +25,7 @@ namespace NCodeBuilder.CSharp
     public class CSharpLanguageProvider : CLanguageFamilyProvider
     {
         public CSharpLanguageProvider()
-            : base(CLanguageBraceStyle.AllmanBSD)
+            : base("C#", CLanguageBraceStyle.NextLine)
         {
         }
     }

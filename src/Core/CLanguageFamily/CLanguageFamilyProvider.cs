@@ -19,16 +19,14 @@ limitations under the License.
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NCodeBuilder.CLanguageFamily
 {
     public class CLanguageFamilyProvider : LanguageProvider
     {
-        public CLanguageFamilyProvider(CLanguageBraceStyle braceStyle = CLanguageBraceStyle.KAndR)
+        public CLanguageFamilyProvider(string name = "C Language Family",
+            CLanguageBraceStyle braceStyle = CLanguageBraceStyle.NextLine)
+            : base(name)
         {
             IndentSize = 4;
             CommentBuilder = (code, comment) => code.Line($"// {comment}");
@@ -39,16 +37,26 @@ namespace NCodeBuilder.CLanguageFamily
             StartBlockBuilder = (cb, code) =>
             {
                 string? line = code.ToString();
-                cb.Line(line);
-                _ = cb.Line("{").Indent;
+                _ = BraceStyle switch
+                {
+                    CLanguageBraceStyle.NextLine => cb.Line(line).Line("{").Indent,
+                    CLanguageBraceStyle.SameLine => cb.Line($"{line} {{").Indent,
+                    _ => throw new InvalidOperationException($"Unexpected brace style specified: {BraceStyle}."),
+                };
             };
             EndBlockBuilder = code => code.Unindent.Line("}");
+            BraceStyle = braceStyle;
         }
+
+        /// <summary>
+        ///     Gets or sets the brace style to use for code blocks.
+        /// </summary>
+        public CLanguageBraceStyle BraceStyle { get; set; }
     }
 
     public enum CLanguageBraceStyle
     {
-        KAndR,
-        AllmanBSD,
+        NextLine,
+        SameLine,
     }
 }

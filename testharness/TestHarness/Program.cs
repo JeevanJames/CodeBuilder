@@ -21,6 +21,7 @@ limitations under the License.
 using System;
 
 using NCodeBuilder;
+using NCodeBuilder.CLanguageFamily;
 using NCodeBuilder.CSharp;
 
 using static System.Console;
@@ -29,9 +30,8 @@ namespace TestHarness
 {
     internal static class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
-            Delegate d = (Func<string>)(() => "Blah");
             string code = new CodeBuilder(new CSharpLanguageProvider())
                 .MultiLineComment(
                     "CodeBuilder framework",

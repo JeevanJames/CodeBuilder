@@ -4,11 +4,296 @@
         <name>NCodeBuilder</name>
     </assembly>
     <members>
+        <member name="P:NCodeBuilder.CLanguageFamily.CLanguageFamilyProvider.BraceStyle">
+            <summary>
+                Gets or sets the brace style to use for code blocks.
+            </summary>
+        </member>
+        <member name="T:NCodeBuilder.CodeBuilder">
+            <summary>
+                Generates code by concatenating smaller code blocks.
+                <para/>
+                Similar to a <see cref="T:System.Text.StringBuilder"/>, but with code-specific methods.
+            </summary>
+        </member>
+        <member name="M:NCodeBuilder.CodeBuilder.#ctor(NCodeBuilder.LanguageProvider)">
+            <summary>
+                Initializes an instance of the <see cref="T:NCodeBuilder.CodeBuilder"/> class with the specific
+                <paramref name="language"/> provider.
+            </summary>
+            <param name="language">
+                A <see cref="T:NCodeBuilder.LanguageProvider"/> that provides language-specific code generation
+                enhancements.
+                <para/>
+                If not specified, then the <see cref="F:NCodeBuilder.LanguageProvider.NoLanguage"/> provider is used,
+                which does not provide any language enhancements.
+            </param>
+        </member>
+        <member name="P:NCodeBuilder.CodeBuilder.Blank">
+            <summary>
+                Adds a blank line.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.CodeBuilder.Indent">
+            <summary>
+                Indents the code by a level.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.CodeBuilder.Unindent">
+            <summary>
+                Unindents the code by a level.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">
+                Thrown if an attempt is made to unindent below 0.
+            </exception>
+        </member>
+        <member name="M:NCodeBuilder.CodeBuilder.Line(NCodeBuilder.CodeLine)">
+            <summary>
+                Adds a line of <paramref name="code"/>. If the code is <c>null</c>, nothing is added.
+            </summary>
+            <param name="code">
+                The code line to add.
+                <para/>
+                This can either be a <see cref="T:System.String"/> or a factory delegate
+                (<see cref="T:NCodeBuilder.CodeFactory"/>) that returns a string.
+            </param>
+            <returns>
+                An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
+            </returns>
+        </member>
+        <member name="M:NCodeBuilder.CodeBuilder.Line(NCodeBuilder.CodeLine,System.Func{System.Boolean})">
+            <summary>
+                Adds a line of <paramref name="code"/> if the specified <paramref name="predicate"/> is
+                <c>true</c>.
+            </summary>
+            <param name="code">
+                The code line to add.
+                <para/>
+                This can either be a <see cref="T:System.String"/> or a factory delegate
+                (<see cref="T:NCodeBuilder.CodeFactory"/>) that returns a string.
+            </param>
+            <param name="predicate">The predicate to test.</param>
+            <returns>
+                An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
+            </returns>
+        </member>
+        <member name="M:NCodeBuilder.CodeBuilder.Line(NCodeBuilder.CodeLine,System.Boolean)">
+            <summary>
+                Adds a line of <paramref name="code"/> if the specified <paramref name="condition"/> is
+                <c>true</c>.
+            </summary>
+            <param name="code">
+                The code line to add.
+                <para/>
+                This can either be a <see cref="T:System.String"/> or a factory delegate
+                (<see cref="T:NCodeBuilder.CodeFactory"/>) that returns a string.
+            </param>
+            <param name="condition">The condition to test.</param>
+            <returns>
+                An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
+            </returns>
+        </member>
+        <member name="M:NCodeBuilder.CodeBuilder.Repeat``1(System.Collections.Generic.IEnumerable{``0},System.Action{NCodeBuilder.CodeBuilder,``0})">
+            <summary>
+                Iterates over a <paramref name="collection"/> and executes the specified
+                <paramref name="action"/> on each item.
+            </summary>
+            <typeparam name="T">The type of item in the <paramref name="collection"/>.</typeparam>
+            <param name="collection">The collection to iterate over.</param>
+            <param name="action">
+                The action to execute. This action accepts two parameters - the
+                <see cref="T:NCodeBuilder.CodeBuilder"/> instance and the item itself.
+            </param>
+            <returns>
+                An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
+            </returns>
+        </member>
+        <member name="M:NCodeBuilder.CodeBuilder.Repeat``1(System.Collections.Generic.IEnumerable{``0},System.Action{NCodeBuilder.CodeBuilder,``0,System.Int32})">
+            <summary>
+                Iterates over a <paramref name="collection"/> and executes the specified
+                <paramref name="action"/> on each item.
+            </summary>
+            <typeparam name="T">The type of item in the <paramref name="collection"/>.</typeparam>
+            <param name="collection">The collection to iterate over.</param>
+            <param name="action">
+                The action to execute. This action accepts three parameters - the
+                <see cref="T:NCodeBuilder.CodeBuilder"/> instance, the item itself and the index of the item in the
+                collection.
+            </param>
+            <returns>
+                An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
+            </returns>
+        </member>
+        <member name="M:NCodeBuilder.CodeBuilder.Block(System.Nullable{NCodeBuilder.CodeLine},System.String)">
+            <summary>
+                Starts a new code block. This is language-specific and what exactly happens depends on
+                the implementation in the underlying language provider.
+            </summary>
+            <param name="code">
+                Optional code associated with the code block. Some languages may need this.
+                <para/>
+                For example, in C#, an <c>if</c> block needs to specify the condition to check before
+                starting the block.
+                <para/>
+                This can either be a <see cref="T:System.String"/> or a factory delegate
+                (<see cref="T:NCodeBuilder.CodeFactory"/>) that returns a string.
+            </param>
+            <param name="context">
+                An optional name for the block, which can be checked when the
+                <see cref="M:NCodeBuilder.CodeBuilder.EndBlock(System.String)"/> method is called to close the block to ensure that the
+                correct block is being closed.
+            </param>
+            <returns>
+                An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
+            </returns>
+        </member>
+        <member name="M:NCodeBuilder.CodeBuilder.EndBlock(System.String)">
+            <summary>
+                Closes an existing code block created using the <see cref="M:NCodeBuilder.CodeBuilder.Block(System.Nullable{NCodeBuilder.CodeLine},System.String)"/>
+                method. This is language-specific and what exactly happens depends on the implementation
+                in the underlying language provider.
+            </summary>
+            <param name="context">
+                An optional name for the block, which needs to match against the name specified in the
+                <see cref="M:NCodeBuilder.CodeBuilder.Block(System.Nullable{NCodeBuilder.CodeLine},System.String)"/> method. This will ensure that this method is closing the correct
+                block.
+            </param>
+            <returns>
+                An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">
+                Thrown if the method is called without aexisting block, or if the specified
+                <paramref name="context"/> does not match the block's context.
+            </exception>
+        </member>
+        <member name="M:NCodeBuilder.CodeBuilder.Comment(NCodeBuilder.CodeLine[])">
+            <summary>
+                Adds one or more single line comments. This is language-specific and what exactly
+                happens depends on the implementation in the underlying language provider.
+            </summary>
+            <param name="comments">The single line comments to add.</param>
+            <returns>
+                An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
+            </returns>
+        </member>
+        <member name="M:NCodeBuilder.CodeBuilder.Comment(System.Collections.Generic.IEnumerable{NCodeBuilder.CodeLine})">
+            <summary>
+                Adds one or more single line comments. This is language-specific and what exactly
+                happens depends on the implementation in the underlying language provider.
+            </summary>
+            <param name="comments">The single line comments to add.</param>
+            <returns>
+                An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
+            </returns>
+        </member>
+        <member name="M:NCodeBuilder.CodeBuilder.MultiLineComment(NCodeBuilder.CodeLine[])">
+            <summary>
+                Adds a multi-line comment with the specified <paramref name="comments"/> lines. This is
+                language-specific and what exactly happens depends on the implementation in the
+                underlying language provider.
+            </summary>
+            <param name="comments">The lines to add in the multi-line comment.</param>
+            <returns>
+                An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
+            </returns>
+        </member>
+        <member name="M:NCodeBuilder.CodeBuilder.MultiLineComment(System.Collections.Generic.IEnumerable{NCodeBuilder.CodeLine})">
+            <summary>
+                Adds a multi-line comment with the specified <paramref name="comments"/> lines. This is
+                language-specific and what exactly happens depends on the implementation in the
+                underlying language provider.
+            </summary>
+            <param name="comments">The lines to add in the multi-line comment.</param>
+            <returns>
+                An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
+            </returns>
+        </member>
+        <member name="M:NCodeBuilder.CodeBuilder.ToString">
+            <summary>
+                Generates the code.
+            </summary>
+            <returns>The code.</returns>
+        </member>
         <member name="T:NCodeBuilder.CodeLine">
             <summary>
                 Represents a line of code, either as a string value or a factory that dynamically creates
                 the code.
             </summary>
+        </member>
+        <member name="T:NCodeBuilder.CodeFactory">
+            <summary>
+                Delegate that can be used to dynamically construct a line of code. Equivalent to a
+                <c>Func&lt;string&gt;</c>
+            </summary>
+        </member>
+        <member name="T:NCodeBuilder.LanguageProvider">
+            <summary>
+                Provides language-specific enhancements to the <see cref="T:NCodeBuilder.CodeBuilder"/>. This includes
+                default indentation size, support for various kinds of comments (single-line, multi-line and
+                documentation comments) and code blocks.
+            </summary>
+        </member>
+        <member name="M:NCodeBuilder.LanguageProvider.#ctor(System.String)">
+            <summary>
+                Initializes a new instance of the <see cref="T:NCodeBuilder.LanguageProvider"/> class with the
+                specified <paramref name="name"/>.
+            </summary>
+            <param name="name">The name of the language supported by this provider.</param>
+        </member>
+        <member name="P:NCodeBuilder.LanguageProvider.Name">
+            <summary>
+                Gets the name of the language supported by this provider.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.LanguageProvider.IndentSize">
+            <summary>
+                Gets or sets the indentation size.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.LanguageProvider.CommentBuilder">
+            <summary>
+                Gets or sets the delegate that is used to add single-line comments to the code.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.LanguageProvider.MultiLineCommentBuilder">
+            <summary>
+                Gets or sets the delegate that is used to add multi-line comments to the code.
+                <para/>
+                The default implementation calls the single-line comment generator multiple times.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.LanguageProvider.DocumentationCommentBuilder">
+            <summary>
+                Gets or sets the delegate that is used to add documentation comments to the code.
+                <para/>
+                The default implementation calls the multi-line comment generator.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.LanguageProvider.StartBlockBuilder">
+            <summary>
+                Gets or sets the delegate that is used to start a code block in the code.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.LanguageProvider.EndBlockBuilder">
+            <summary>
+                Gets or sets the delegate that is used to end a code block in the code.
+            </summary>
+        </member>
+        <member name="F:NCodeBuilder.LanguageProvider.NoLanguage">
+            <summary>
+                A <see cref="T:NCodeBuilder.LanguageProvider"/> that does not represent any language. In other words, a
+                no-op language provider, where all builder property implementations are no-ops.
+                <para/>
+                Use this language provider, if you do not want any language specific enhancements.
+            </summary>
+        </member>
+        <member name="M:NCodeBuilder.LanguageProvider.Text(System.Int32)">
+            <summary>
+                A <see cref="T:NCodeBuilder.LanguageProvider"/> that represents text content. There is no support for
+                comments, but blocks are supported by indentation.
+            </summary>
+            <param name="indentSize">The indentation size to use for blocks. Defaults to 4.</param>
+            <returns>A <see cref="T:NCodeBuilder.LanguageProvider"/> instance/</returns>
         </member>
     </members>
 </doc>

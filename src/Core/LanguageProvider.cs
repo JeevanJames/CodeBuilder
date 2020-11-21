@@ -20,26 +20,99 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace NCodeBuilder
 {
+    /// <summary>
+    ///     Provides language-specific enhancements to the <see cref="CodeBuilder"/>. This includes
+    ///     default indentation size, support for various kinds of comments (single-line, multi-line and
+    ///     documentation comments) and code blocks.
+    /// </summary>
+    [DebuggerDisplay("Language provider for {Name}")]
     public class LanguageProvider
     {
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="LanguageProvider"/> class with the
+        ///     specified <paramref name="name"/>.
+        /// </summary>
+        /// <param name="name">The name of the language supported by this provider.</param>
+        public LanguageProvider(string name)
+        {
+            Name = name;
+        }
+
+        /// <summary>
+        ///     Gets the name of the language supported by this provider.
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
+        ///     Gets or sets the indentation size.
+        /// </summary>
         public int IndentSize { get; set; }
 
+        /// <summary>
+        ///     Gets or sets the delegate that is used to add single-line comments to the code.
+        /// </summary>
         public Action<CodeBuilder, CodeLine> CommentBuilder { get; set; }
             = (_, _) => throw new InvalidOperationException("Current language provider does not provide a single-line comment builder.");
 
+        /// <summary>
+        ///     Gets or sets the delegate that is used to add multi-line comments to the code.
+        ///     <para/>
+        ///     The default implementation calls the single-line comment generator multiple times.
+        /// </summary>
         public Action<CodeBuilder, IEnumerable<CodeLine>> MultiLineCommentBuilder { get; set; }
-            = (_, _) => throw new InvalidOperationException("Current language provider does not provide a multi-line comment builder.");
+            = (cb, comments) => cb.Comment(comments);
 
+        /// <summary>
+        ///     Gets or sets the delegate that is used to add documentation comments to the code.
+        ///     <para/>
+        ///     The default implementation calls the multi-line comment generator.
+        /// </summary>
         public Action<CodeBuilder, IEnumerable<CodeLine>> DocumentationCommentBuilder { get; set; }
-            = (_, _) => throw new InvalidOperationException("Current language provider does not provide a documentation comment builder.");
+            = (cb, comments) => cb.MultiLineComment(comments);
 
+        /// <summary>
+        ///     Gets or sets the delegate that is used to start a code block in the code.
+        /// </summary>
         public Action<CodeBuilder, CodeLine?> StartBlockBuilder { get; set; }
             = (_, _) => throw new InvalidOperationException("Current language provider does not provide a start block builder.");
 
+        /// <summary>
+        ///     Gets or sets the delegate that is used to end a code block in the code.
+        /// </summary>
         public Action<CodeBuilder> EndBlockBuilder { get; set; }
             = _ => throw new InvalidOperationException("Current language provider does not provide an end block builder.");
+
+        /// <summary>
+        ///     A <see cref="LanguageProvider"/> that does not represent any language. In other words, a
+        ///     no-op language provider, where all builder property implementations are no-ops.
+        ///     <para/>
+        ///     Use this language provider, if you do not want any language specific enhancements.
+        /// </summary>
+        public static readonly LanguageProvider NoLanguage = new LanguageProvider("No Language")
+        {
+            CommentBuilder = (_, _) => { },
+            StartBlockBuilder = (_, _) => { },
+            EndBlockBuilder = _ => { },
+        };
+
+        /// <summary>
+        ///     A <see cref="LanguageProvider"/> that represents text content. There is no support for
+        ///     comments, but blocks are supported by indentation.
+        /// </summary>
+        /// <param name="indentSize">The indentation size to use for blocks. Defaults to 4.</param>
+        /// <returns>A <see cref="LanguageProvider"/> instance/</returns>
+        public static LanguageProvider Text(int indentSize = 4) => new LanguageProvider("Text")
+        {
+            IndentSize = indentSize,
+            CommentBuilder = (_, _) => { },
+            MultiLineCommentBuilder = (_, _) => { },
+            DocumentationCommentBuilder = (_, _) => { },
+            StartBlockBuilder = (cb, code) => cb.Indent.Line(code.ToString()),
+            EndBlockBuilder = cb => _ = cb.Unindent,
+        };
     }
 }
