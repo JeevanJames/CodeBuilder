@@ -32,7 +32,7 @@ namespace TestHarness
     {
         private static void Main()
         {
-            string code = new CodeBuilder(new CSharpLanguageProvider())
+            CodeBuilder builder = new CodeBuilder(new CSharpLanguageProvider())
                 .MultiLineComment(
                     "CodeBuilder framework",
                     "Copyright (c) 2019-2020 Jeevan James")
@@ -58,9 +58,9 @@ namespace TestHarness
                             .EndTry()
                         .EndBlock()
                     .EndBlock()
-                .EndNamespace()
-                .ToString();
+                .EndNamespace();
 
+            string code = builder.ToString();
             WriteLine(code);
         }
     }

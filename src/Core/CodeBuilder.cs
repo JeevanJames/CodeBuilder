@@ -21,6 +21,8 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace NCodeBuilder
@@ -30,7 +32,7 @@ namespace NCodeBuilder
     ///     <para/>
     ///     Similar to a <see cref="StringBuilder"/>, but with code-specific methods.
     /// </summary>
-    [DebuggerDisplay("Code Builder for {_language.Name}")]
+    [DebuggerDisplay("Code Builder for {_language.Name,nq}")]
     public sealed class CodeBuilder
     {
         private readonly StringBuilder _builder = new();
@@ -203,6 +205,31 @@ namespace NCodeBuilder
                 action(this, item, index);
                 index++;
             }
+            return this;
+        }
+
+        /// <summary>
+        ///     Iterates over all public, non-indexer properties in the specified <paramref name="obj"/>
+        ///     and executes the specified <paramref name="action"/> on each property.
+        /// </summary>
+        /// <param name="obj">The object to iterate over.</param>
+        /// <param name="action">
+        ///     The action to execute. This action accepts three parameters - the
+        ///     <see cref="CodeBuilder"/> instance, the property name and the property value.
+        /// </param>
+        /// <returns>
+        ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
+        /// </returns>
+        public CodeBuilder Iterate(object obj, Action<CodeBuilder, string, object> action)
+        {
+            if (obj is null)
+                return this;
+
+            IEnumerable<PropertyInfo> properties = obj.GetType().GetProperties()
+                .Where(pi => pi.CanRead && pi.GetIndexParameters().Length == 0);
+            foreach (PropertyInfo property in properties)
+                action(this, property.Name, property.GetValue(obj));
+
             return this;
         }
 

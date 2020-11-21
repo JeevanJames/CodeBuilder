@@ -29,7 +29,7 @@ namespace NCodeBuilder
     ///     default indentation size, support for various kinds of comments (single-line, multi-line and
     ///     documentation comments) and code blocks.
     /// </summary>
-    [DebuggerDisplay("Language provider for {Name}")]
+    [DebuggerDisplay("Language provider for {Name,nq}")]
     public class LanguageProvider
     {
         /// <summary>

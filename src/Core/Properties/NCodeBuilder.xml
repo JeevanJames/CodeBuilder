@@ -124,6 +124,20 @@
                 An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
             </returns>
         </member>
+        <member name="M:NCodeBuilder.CodeBuilder.Iterate(System.Object,System.Action{NCodeBuilder.CodeBuilder,System.String,System.Object})">
+            <summary>
+                Iterates over all public, non-indexer properties in the specified <paramref name="obj"/>
+                and executes the specified <paramref name="action"/> on each property.
+            </summary>
+            <param name="obj">The object to iterate over.</param>
+            <param name="action">
+                The action to execute. This action accepts three parameters - the
+                <see cref="T:NCodeBuilder.CodeBuilder"/> instance, the property name and the property value.
+            </param>
+            <returns>
+                An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
+            </returns>
+        </member>
         <member name="M:NCodeBuilder.CodeBuilder.Block(System.Nullable{NCodeBuilder.CodeLine},System.String)">
             <summary>
                 Starts a new code block. This is language-specific and what exactly happens depends on
