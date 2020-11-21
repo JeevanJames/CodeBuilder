@@ -307,7 +307,7 @@ namespace NCodeBuilder
         ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///     Thrown if the method is called without aexisting block, or if the specified
+        ///     Thrown if the method is called without an existing block, or if the specified
         ///     <paramref name="context"/> does not match the block's context.
         /// </exception>
         public CodeBuilder EndBlock(string? context = null)
