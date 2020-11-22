@@ -61,3 +61,10 @@ namespace MyApp
 ## Additional documentation
 * [API reference](./.docs/index.md)
 * [Language providers](https://github.com/JeevanJames/CodeBuilder/wiki/Language-providers): All about language providers used by NCodeBuilder to customize generated code for specific languages.
+
+## Alternate frameworks and tools
+If NCodeBuilder does not meet your needs, try one of these frameworks:
+* [CodeBuilder](https://github.com/etgryphon/codebuilder) ([nuget](https://www.nuget.org/packages/CodeBuilder)): More strongly-typed, targetted at C# code generation only.
+* [CodeWriter](https://github.com/SaladLab/CodeWriter) ([nuget](https://www.nuget.org/packages/CodeWriter)): Similar design to NCodeBuilder. Offers a concise mode. This is a .NET Framework library. A netstandard port can be found [here](https://github.com/tteogi/CodeWriter) ([nuget](https://www.nuget.org/packages/CodeWriter.Core)).
+
+Another option is to use Roslyn (using the `Microsoft.CodeAnalysis.CSharp.SyntaxFactory` class), although it can get quite verbose. Try the [RoslynQuoter](https://roslynquoter.azurewebsites.net) site to play with this.
