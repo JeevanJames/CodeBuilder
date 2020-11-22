@@ -10,19 +10,44 @@
         <NoWarn>1701;1702;1591</NoWarn>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
+
+        <!-- Documentation properties -->
         <DocumentationFile>Properties\$(AssemblyName).xml</DocumentationFile>
         <DefaultDocumentationFolder>..\..\.docs</DefaultDocumentationFolder>
+
+        <!-- Package properties -->
+        <Version>0.1.0</Version>
+        <Authors>Jeevan James</Authors>
+        <Company>Jeevan James</Company>
+        <Description>Fluent code generation framework for .NET</Description>
+        <Copyright>Copyright (c) 2019-20 Jeevan James</Copyright>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/JeevanJames/CodeBuilder</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/JeevanJames/CodeBuilder.git</RepositoryUrl>
+        <RepositoryType>Git</RepositoryType>
+        <PackageTags>code generation codebuilder</PackageTags>
+        <NeutralLanguage>en-US</NeutralLanguage>
+
+        <!-- SourceLink properties -->
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="DefaultDocumentation" Version="0.6.12">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
+        <PackageReference Include="DefaultDocumentation" Version="0.6.12">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Properties\" />
+        <Folder Include="Properties\" />
     </ItemGroup>
 
 </Project>

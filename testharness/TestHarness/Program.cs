@@ -33,7 +33,7 @@ namespace TestHarness
         {
             string[] enumValues = { "Earth", "Water", "Fire", "Air" };
 
-            LanguageProvider language = LanguageProvider.CSharp(NCodeBuilder.CLanguageFamily.CLanguageBraceStyle.SameLine);
+            var language = LanguageProvider.CSharp(NCodeBuilder.CLanguageFamily.CLanguageBraceStyle.SameLine);
             //LanguageProvider language = LanguageProvider.Python;
             CodeBuilder builder = new CodeBuilder(language)
                 .MultiLineComment(
