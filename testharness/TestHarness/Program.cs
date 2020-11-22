@@ -31,6 +31,8 @@ namespace TestHarness
     {
         private static void Main()
         {
+            string[] enumValues = { "Earth", "Water", "Fire", "Air" };
+
             LanguageProvider language = LanguageProvider.CSharp();
             //LanguageProvider language = LanguageProvider.Python;
             CodeBuilder builder = new CodeBuilder(language)
@@ -67,7 +69,14 @@ namespace TestHarness
                         .EndBlock()
                         .EndSection()
                     .EndBlock()
+                    .Blank
+                    .Block("public enum Elements")
+                        .Repeat(enumValues, (cb, s) => cb.Inline(s.Item).Add(",", !s.IsLast).Done())
+                    .EndBlock()
                 .EndNamespace();
+
+            if (DateTime.Now.DayOfWeek is not (DayOfWeek.Saturday or DayOfWeek.Monday))
+                WriteLine("Not Weekend");
 
             string code = builder.ToString();
             WriteLine(code);

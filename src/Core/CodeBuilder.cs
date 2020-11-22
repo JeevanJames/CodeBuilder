@@ -183,6 +183,11 @@ namespace NCodeBuilder
             return this;
         }
 
+        public InlineCodeBuilder Inline()
+        {
+            return new InlineCodeBuilder(this);
+        }
+
         public InlineCodeBuilder Inline(string str, bool condition = true)
         {
             return new InlineCodeBuilder(this, str, condition);
@@ -200,29 +205,6 @@ namespace NCodeBuilder
         /// <typeparam name="T">The type of item in the <paramref name="collection"/>.</typeparam>
         /// <param name="collection">The collection to iterate over.</param>
         /// <param name="action">
-        ///     The action to execute. This action accepts two parameters - the
-        ///     <see cref="CodeBuilder"/> instance and the item itself.
-        /// </param>
-        /// <returns>
-        ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
-        /// </returns>
-        public CodeBuilder Repeat<T>(IEnumerable<T> collection, Action<CodeBuilder, T> action)
-        {
-            if (!_canEmit)
-                return this;
-
-            foreach (T item in collection)
-                action(this, item);
-            return this;
-        }
-
-        /// <summary>
-        ///     Iterates over a <paramref name="collection"/> and executes the specified
-        ///     <paramref name="action"/> on each item.
-        /// </summary>
-        /// <typeparam name="T">The type of item in the <paramref name="collection"/>.</typeparam>
-        /// <param name="collection">The collection to iterate over.</param>
-        /// <param name="action">
         ///     The action to execute. This action accepts three parameters - the
         ///     <see cref="CodeBuilder"/> instance, the item itself and the index of the item in the
         ///     collection.
@@ -230,7 +212,7 @@ namespace NCodeBuilder
         /// <returns>
         ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
         /// </returns>
-        public CodeBuilder Repeat<T>(IEnumerable<T> collection, Action<CodeBuilder, T, int> action)
+        public CodeBuilder Repeat<T>(IEnumerable<T> collection, Action<CodeBuilder, RepeatState<T>> action)
         {
             if (!_canEmit)
                 return this;
@@ -238,7 +220,7 @@ namespace NCodeBuilder
             int index = 0;
             foreach (T item in collection)
             {
-                action(this, item, index);
+                action(this, new RepeatState<T>(collection, item, index));
                 index++;
             }
             return this;

@@ -19,6 +19,8 @@ limitations under the License.
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace NCodeBuilder
@@ -28,29 +30,46 @@ namespace NCodeBuilder
         private readonly CodeBuilder _builder;
         private readonly StringBuilder _inlineBuilder = new();
 
-        internal InlineCodeBuilder(CodeBuilder builder, string? str, bool condition)
+        internal InlineCodeBuilder(CodeBuilder builder)
         {
             _builder = builder;
-            Inline(str, condition);
+        }
+
+        internal InlineCodeBuilder(CodeBuilder builder, string? str, bool condition)
+            : this(builder)
+        {
+            Add(str, condition);
         }
 
         internal InlineCodeBuilder(CodeBuilder builder, string? str, Func<bool> predicate)
+            : this(builder)
         {
-            _builder = builder;
-            Inline(str, predicate);
+            Add(str, predicate);
         }
 
-        public InlineCodeBuilder Inline(string? str, bool condition = true)
+        public InlineCodeBuilder Add(string? str, bool condition = true)
         {
             if (condition && str is not null)
                 _inlineBuilder.Append(str);
             return this;
         }
 
-        public InlineCodeBuilder Inline(string? str, Func<bool> predicate)
+        public InlineCodeBuilder Add(string? str, Func<bool> predicate)
         {
             if (str is not null && predicate())
                 _inlineBuilder.Append(str);
+            return this;
+        }
+
+        public InlineCodeBuilder Repeat<T>(IEnumerable<T> collection,
+            Action<InlineCodeBuilder, RepeatState<T>> action)
+        {
+            int index = 0;
+            foreach (T item in collection)
+            {
+                action(this, new RepeatState<T>(collection, item, index));
+                index++;
+            }
             return this;
         }
 

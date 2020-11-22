@@ -48,7 +48,7 @@ namespace NCodeBuilder
             {
                 DocumentationCommentBuilder = (cb, comments) => cb
                     .Line("/// <summary>")
-                    .Repeat(comments, (cb2, comment) => cb2.Line($"///     {comment}"))
+                    .Repeat(comments, (cb2, s) => cb2.Line($"///     {s.Item}"))
                     .Line("/// </summary>"),
             };
         }
@@ -58,10 +58,10 @@ namespace NCodeBuilder
             IndentSize = 4,
             CommentBuilder = (cb, comment) => cb.Line($"# {comment}"),
             DocumentationCommentBuilder = (cb, comments) => cb
-                .Repeat(comments, (cb2, comment, index) => cb2
-                    .Inline(@""""""" ", index == 0)
-                    .Inline(comment.ToString())
-                    .Inline(@" """"""", comments.Count() == 1)
+                .Repeat(comments, (cb2, s) => cb2
+                    .Inline(@""""""" ", s.IsFirst)
+                    .Add(s.Item.ToString())
+                    .Add(@" """"""", s.Count == 1)
                     .Done())
                 .Line(@"""""""", comments.Count() > 1),
             StartBlockBuilder = (cb, code) => _ = cb.Line(code.ToString()).Indent,

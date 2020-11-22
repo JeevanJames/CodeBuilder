@@ -93,22 +93,7 @@
                 An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
             </returns>
         </member>
-        <member name="M:NCodeBuilder.CodeBuilder.Repeat``1(System.Collections.Generic.IEnumerable{``0},System.Action{NCodeBuilder.CodeBuilder,``0})">
-            <summary>
-                Iterates over a <paramref name="collection"/> and executes the specified
-                <paramref name="action"/> on each item.
-            </summary>
-            <typeparam name="T">The type of item in the <paramref name="collection"/>.</typeparam>
-            <param name="collection">The collection to iterate over.</param>
-            <param name="action">
-                The action to execute. This action accepts two parameters - the
-                <see cref="T:NCodeBuilder.CodeBuilder"/> instance and the item itself.
-            </param>
-            <returns>
-                An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
-            </returns>
-        </member>
-        <member name="M:NCodeBuilder.CodeBuilder.Repeat``1(System.Collections.Generic.IEnumerable{``0},System.Action{NCodeBuilder.CodeBuilder,``0,System.Int32})">
+        <member name="M:NCodeBuilder.CodeBuilder.Repeat``1(System.Collections.Generic.IEnumerable{``0},System.Action{NCodeBuilder.CodeBuilder,NCodeBuilder.RepeatState{``0}})">
             <summary>
                 Iterates over a <paramref name="collection"/> and executes the specified
                 <paramref name="action"/> on each item.
@@ -291,6 +276,47 @@
             <summary>
                 Delegate that can be used to dynamically construct a line of code. Equivalent to a
                 <c>Func&lt;string&gt;</c>
+            </summary>
+        </member>
+        <member name="T:NCodeBuilder.RepeatState`1">
+            <summary>
+                Represents the state of an iteration in the <c>Repeat</c> methods.
+            </summary>
+            <typeparam name="T">The type of the items in the collection being iterated.</typeparam>
+        </member>
+        <member name="P:NCodeBuilder.RepeatState`1.Collection">
+            <summary>
+                Gets the reference to the collection being iterated over.
+                <para/>
+                Use this property instead of directly accessing the collection to prevent unnecessary
+                closures.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.RepeatState`1.Item">
+            <summary>
+                Gets the current iterated item in the collection.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.RepeatState`1.Index">
+            <summary>
+                Gets the index of the current iterated item in the collection.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.RepeatState`1.Count">
+            <summary>
+                Gets the number of items in the collection.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.RepeatState`1.IsFirst">
+            <summary>
+                Gets a value indicating whether the current iteration item is the first item in the
+                collection.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.RepeatState`1.IsLast">
+            <summary>
+                Gets a value indicating whether the current iteration item is the last item in the
+                collection.
             </summary>
         </member>
         <member name="T:NCodeBuilder.LanguageProvider">
