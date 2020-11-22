@@ -33,6 +33,20 @@ namespace NCodeBuilder.CSharp
 
         public static CodeBuilder EndNamespace(this CodeBuilder cb) => cb.EndBlock("namespace");
 
+        public static CodeBuilder If(this CodeBuilder cb, params string[] conditions)
+        {
+            return cb.Repeat(conditions, (cb2, s) => cb2
+                    .Line($"if ({s.Item})", s.Count == 1)
+                    .Line($"if ({s.Item}", s.Count > 1 && s.IsFirst)
+                    .Section(s.Count > 1)
+                        .Indent
+                        .Line(s.Item, !s.IsFirst && !s.IsLast)
+                        .Line($"{s.Item})", s.IsLast)
+                        .Unindent
+                    .EndSection())
+                .Block();
+        }
+
         private const string TryCatchFinallyBlock = "try-catch-finally";
 
         public static CodeBuilder Try(this CodeBuilder cb) => cb.Block("try", TryCatchFinallyBlock);

@@ -59,7 +59,9 @@ namespace TestHarness
                             "Does not return anything")
                         .Block("public void DoSomething()")
                             .Try()
-                                .Line("WriteLine(_value);")
+                                .If("DateTime.Now.DayOfWeek == DayOfWeek.Monday")
+                                    .Line("WriteLine(_value);")
+                                .EndBlock()
                             .Catch<Exception>("ex")
                                 .Section(true)
                                 .Comment((CodeFactory)(() => $"Error at {DateTime.Now:f}"))
@@ -70,16 +72,19 @@ namespace TestHarness
                         .EndSection()
                     .EndBlock()
                     .Blank
-                    .Block("public enum Elements")
-                        .Repeat(enumValues, (cb, s) => cb.Inline(s.Item).Add(",", !s.IsLast).Done())
-                    .EndBlock()
+                    .Generate(Enums, enumValues)
                 .EndNamespace();
-
-            if (DateTime.Now.DayOfWeek is not (DayOfWeek.Saturday or DayOfWeek.Monday))
-                WriteLine("Not Weekend");
 
             string code = builder.ToString();
             WriteLine(code);
+        }
+
+        private static void Enums(CodeBuilder code, string[] enumValues)
+        {
+            code.Block("public enum Elements")
+                .Repeat(enumValues, (cb, s) => cb.Inline(s.Item).Add(",", !s.IsLast).Done())
+                .EndBlock();
+
         }
     }
 }

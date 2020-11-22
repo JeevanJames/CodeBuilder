@@ -365,6 +365,38 @@ namespace NCodeBuilder
         }
 
         /// <summary>
+        ///     Executes the generator delegate to generate code. Useful to break the generation code
+        ///     into separate methods.
+        /// </summary>
+        /// <param name="generator">The delegate to run.</param>
+        /// <param name="condition">The condition to test.</param>
+        /// <returns>
+        ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
+        /// </returns>
+        public CodeBuilder Generate(Action<CodeBuilder> generator, bool condition = true)
+        {
+            if (!_canEmit)
+                return this;
+
+            if (condition)
+                generator?.Invoke(this);
+
+            return this;
+        }
+
+        public CodeBuilder Generate<T>(Action<CodeBuilder, T> generator, T args, bool condition = true)
+        {
+            if (!_canEmit)
+                return this;
+
+            if (condition)
+                generator?.Invoke(this, args);
+
+            return this;
+
+        }
+
+        /// <summary>
         ///     Adds one or more single line comments. This is language-specific and what exactly
         ///     happens depends on the implementation in the underlying language provider.
         /// </summary>

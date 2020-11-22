@@ -196,6 +196,17 @@
                 An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
             </returns>
         </member>
+        <member name="M:NCodeBuilder.CodeBuilder.Generate(System.Action{NCodeBuilder.CodeBuilder},System.Boolean)">
+            <summary>
+                Executes the generator delegate to generate code. Useful to break the generation code
+                into separate methods.
+            </summary>
+            <param name="generator">The delegate to run.</param>
+            <param name="condition">The condition to test.</param>
+            <returns>
+                An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
+            </returns>
+        </member>
         <member name="M:NCodeBuilder.CodeBuilder.Comment(NCodeBuilder.CodeLine[])">
             <summary>
                 Adds one or more single line comments. This is language-specific and what exactly

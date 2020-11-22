@@ -36,11 +36,13 @@ namespace NCodeBuilder.CLanguageFamily
                 .Line("*/");
             StartBlockBuilder = (cb, code) =>
             {
-                string? line = code.ToString();
+                string? line = code?.ToString();
                 _ = BraceStyle switch
                 {
+                    CLanguageBraceStyle.NextLine when line is null => cb.Line("{").Indent,
                     CLanguageBraceStyle.NextLine => cb.Line(line).Line("{").Indent,
-                    CLanguageBraceStyle.SameLine => cb.Line($"{line} {{").Indent,
+                    CLanguageBraceStyle.SameLine when line is null => cb.Line($"{line} {{").Indent,
+                    CLanguageBraceStyle.SameLine => cb.Indent,
                     _ => throw new InvalidOperationException($"Unexpected brace style specified: {BraceStyle}."),
                 };
             };
