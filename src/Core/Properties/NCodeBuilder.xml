@@ -176,7 +176,7 @@
                 An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
             </returns>
             <exception cref="T:System.InvalidOperationException">
-                Thrown if the method is called without aexisting block, or if the specified
+                Thrown if the method is called without an existing block, or if the specified
                 <paramref name="context"/> does not match the block's context.
             </exception>
         </member>
@@ -249,6 +249,28 @@
                 underlying language provider.
             </summary>
             <param name="comments">The lines to add in the multi-line comment.</param>
+            <returns>
+                An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
+            </returns>
+        </member>
+        <member name="M:NCodeBuilder.CodeBuilder.DocComments(NCodeBuilder.CodeLine[])">
+            <summary>
+                Adds a documentation comment with the specified <paramref name="comments"/> lines. This
+                is language-specific and what exactly happens depends on the implementation in the
+                underlying language provider.
+            </summary>
+            <param name="comments">The lines to add in the documentation comment.</param>
+            <returns>
+                An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
+            </returns>
+        </member>
+        <member name="M:NCodeBuilder.CodeBuilder.DocComments(System.Collections.Generic.IEnumerable{NCodeBuilder.CodeLine})">
+            <summary>
+                Adds a documentation comment with the specified <paramref name="comments"/> lines. This
+                is language-specific and what exactly happens depends on the implementation in the
+                underlying language provider.
+            </summary>
+            <param name="comments">The lines to add in the documentation comment.</param>
             <returns>
                 An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
             </returns>

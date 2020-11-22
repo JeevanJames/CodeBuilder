@@ -22,7 +22,7 @@ using System;
 
 namespace NCodeBuilder.CLanguageFamily
 {
-    public class CLanguageFamilyProvider : LanguageProvider
+    public record CLanguageFamilyProvider : LanguageProvider
     {
         public CLanguageFamilyProvider(string name = "C Language Family",
             CLanguageBraceStyle braceStyle = CLanguageBraceStyle.NextLine)

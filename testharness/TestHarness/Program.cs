@@ -31,7 +31,9 @@ namespace TestHarness
     {
         private static void Main()
         {
-            CodeBuilder builder = new CodeBuilder(new CSharpLanguageProvider())
+            LanguageProvider language = LanguageProvider.CSharp();
+            //LanguageProvider language = LanguageProvider.Python;
+            CodeBuilder builder = new CodeBuilder(language)
                 .MultiLineComment(
                     "CodeBuilder framework",
                     "Copyright (c) 2019-2020 Jeevan James")
@@ -41,14 +43,18 @@ namespace TestHarness
                 .UsingStatic("System.Console")
                 .Blank
                 .Namespace("MyCode")
+                    .DocComments("The main class to do stuff")
                     .Block("public sealed class MyClass")
                         .Line("private readonly string _value;")
                         .Blank
                         .Block("public MyClass(string value)")
                             .Line("_value = value;")
                         .EndBlock()
-                        .Section(() => false)
+                        .Section(() => true)
                         .Blank
+                        .DocComments(
+                            "Does something with the provided value.",
+                            "Does not return anything")
                         .Block("public void DoSomething()")
                             .Try()
                                 .Line("WriteLine(_value);")

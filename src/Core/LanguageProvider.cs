@@ -21,6 +21,7 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace NCodeBuilder
 {
@@ -30,7 +31,7 @@ namespace NCodeBuilder
     ///     documentation comments) and code blocks.
     /// </summary>
     [DebuggerDisplay("Language provider for {Name,nq}")]
-    public class LanguageProvider
+    public partial record LanguageProvider
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="LanguageProvider"/> class with the
@@ -83,32 +84,5 @@ namespace NCodeBuilder
         ///     Gets or sets the delegate that is used to end a code block in the code.
         /// </summary>
         public Action<CodeBuilder> EndBlockBuilder { get; set; } = cb => _ = cb.Unindent;
-
-        /// <summary>
-        ///     A <see cref="LanguageProvider"/> that does not represent any language. In other words, a
-        ///     no-op language provider, where all builder property implementations are no-ops.
-        ///     <para/>
-        ///     Use this language provider, if you do not want any language specific enhancements.
-        /// </summary>
-        public static readonly LanguageProvider NoLanguage = new LanguageProvider("No Language")
-        {
-            CommentBuilder = (_, _) => { },
-        };
-
-        /// <summary>
-        ///     A <see cref="LanguageProvider"/> that represents text content. There is no support for
-        ///     comments, but blocks are supported by indentation.
-        /// </summary>
-        /// <param name="indentSize">The indentation size to use for blocks. Defaults to 4.</param>
-        /// <returns>A <see cref="LanguageProvider"/> instance/</returns>
-        public static LanguageProvider Text(int indentSize = 4) => new LanguageProvider("Text")
-        {
-            IndentSize = indentSize,
-            CommentBuilder = (_, _) => { },
-            MultiLineCommentBuilder = (_, _) => { },
-            DocumentationCommentBuilder = (_, _) => { },
-            StartBlockBuilder = (cb, code) => cb.Indent.Line(code.ToString()),
-            EndBlockBuilder = cb => _ = cb.Unindent,
-        };
     }
 }

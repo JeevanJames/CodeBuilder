@@ -5,12 +5,15 @@ Provides language-specific enhancements to the [CodeBuilder](./NCodeBuilder-Code
 default indentation size, support for various kinds of comments (single-line, multi-line and  
 documentation comments) and code blocks.  
 ```csharp
-public class LanguageProvider
+public class LanguageProvider :
+IEquatable<LanguageProvider>
 ```
 Inheritance [System.Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object 'System.Object') &#129106; LanguageProvider  
 
 Derived  
 &#8627; [CLanguageFamilyProvider](./NCodeBuilder-CLanguageFamily-CLanguageFamilyProvider.md 'NCodeBuilder.CLanguageFamily.CLanguageFamilyProvider')  
+
+Implements [System.IEquatable&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.IEquatable-1 'System.IEquatable`1')[LanguageProvider](./NCodeBuilder-LanguageProvider.md 'NCodeBuilder.LanguageProvider')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.IEquatable-1 'System.IEquatable`1')  
 ### Constructors
 - [LanguageProvider(string)](./NCodeBuilder-LanguageProvider-LanguageProvider(string).md 'NCodeBuilder.LanguageProvider.LanguageProvider(string)')
 ### Fields

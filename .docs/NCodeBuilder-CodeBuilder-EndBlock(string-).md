@@ -19,5 +19,5 @@ block.
 An instance of the same [CodeBuilder](./NCodeBuilder-CodeBuilder.md 'NCodeBuilder.CodeBuilder'), so that calls can be chained.  
 #### Exceptions
 [System.InvalidOperationException](https://docs.microsoft.com/en-us/dotnet/api/System.InvalidOperationException 'System.InvalidOperationException')  
-Thrown if the method is called without aexisting block, or if the specified  
+Thrown if the method is called without an existing block, or if the specified  
 [context](#NCodeBuilder-CodeBuilder-EndBlock(string-)-context 'NCodeBuilder.CodeBuilder.EndBlock(string?).context') does not match the block's context.  

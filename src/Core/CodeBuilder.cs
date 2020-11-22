@@ -183,6 +183,16 @@ namespace NCodeBuilder
             return this;
         }
 
+        public InlineCodeBuilder Inline(string str, bool condition = true)
+        {
+            return new InlineCodeBuilder(this, str, condition);
+        }
+
+        public InlineCodeBuilder Inline(string str, Func<bool> predicate)
+        {
+            return new InlineCodeBuilder(this, str, predicate);
+        }
+
         /// <summary>
         ///     Iterates over a <paramref name="collection"/> and executes the specified
         ///     <paramref name="action"/> on each item.
@@ -441,6 +451,42 @@ namespace NCodeBuilder
                 return this;
 
             _language.MultiLineCommentBuilder(this, comments);
+            return this;
+        }
+
+        /// <summary>
+        ///     Adds a documentation comment with the specified <paramref name="comments"/> lines. This
+        ///     is language-specific and what exactly happens depends on the implementation in the
+        ///     underlying language provider.
+        /// </summary>
+        /// <param name="comments">The lines to add in the documentation comment.</param>
+        /// <returns>
+        ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
+        /// </returns>
+        public CodeBuilder DocComments(params CodeLine[] comments)
+        {
+            if (!_canEmit)
+                return this;
+
+            _language.DocumentationCommentBuilder(this, comments);
+            return this;
+        }
+
+        /// <summary>
+        ///     Adds a documentation comment with the specified <paramref name="comments"/> lines. This
+        ///     is language-specific and what exactly happens depends on the implementation in the
+        ///     underlying language provider.
+        /// </summary>
+        /// <param name="comments">The lines to add in the documentation comment.</param>
+        /// <returns>
+        ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
+        /// </returns>
+        public CodeBuilder DocComments(IEnumerable<CodeLine> comments)
+        {
+            if (!_canEmit)
+                return this;
+
+            _language.DocumentationCommentBuilder(this, comments);
             return this;
         }
 

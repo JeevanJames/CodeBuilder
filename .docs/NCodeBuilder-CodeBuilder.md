@@ -22,6 +22,8 @@ Inheritance [System.Object](https://docs.microsoft.com/en-us/dotnet/api/System.O
 - [Block(System.Nullable&lt;NCodeBuilder.CodeLine&gt;, string?)](./NCodeBuilder-CodeBuilder-Block(System-Nullable-NCodeBuilder-CodeLine-_string-).md 'NCodeBuilder.CodeBuilder.Block(System.Nullable&lt;NCodeBuilder.CodeLine&gt;, string?)')
 - [Comment(NCodeBuilder.CodeLine[])](./NCodeBuilder-CodeBuilder-Comment(NCodeBuilder-CodeLine--).md 'NCodeBuilder.CodeBuilder.Comment(NCodeBuilder.CodeLine[])')
 - [Comment(System.Collections.Generic.IEnumerable&lt;NCodeBuilder.CodeLine&gt;)](./NCodeBuilder-CodeBuilder-Comment(System-Collections-Generic-IEnumerable-NCodeBuilder-CodeLine-).md 'NCodeBuilder.CodeBuilder.Comment(System.Collections.Generic.IEnumerable&lt;NCodeBuilder.CodeLine&gt;)')
+- [DocComments(NCodeBuilder.CodeLine[])](./NCodeBuilder-CodeBuilder-DocComments(NCodeBuilder-CodeLine--).md 'NCodeBuilder.CodeBuilder.DocComments(NCodeBuilder.CodeLine[])')
+- [DocComments(System.Collections.Generic.IEnumerable&lt;NCodeBuilder.CodeLine&gt;)](./NCodeBuilder-CodeBuilder-DocComments(System-Collections-Generic-IEnumerable-NCodeBuilder-CodeLine-).md 'NCodeBuilder.CodeBuilder.DocComments(System.Collections.Generic.IEnumerable&lt;NCodeBuilder.CodeLine&gt;)')
 - [EndBlock(string?)](./NCodeBuilder-CodeBuilder-EndBlock(string-).md 'NCodeBuilder.CodeBuilder.EndBlock(string?)')
 - [EndSection()](./NCodeBuilder-CodeBuilder-EndSection().md 'NCodeBuilder.CodeBuilder.EndSection()')
 - [Iterate(object, System.Action&lt;NCodeBuilder.CodeBuilder,string,object&gt;)](./NCodeBuilder-CodeBuilder-Iterate(object_System-Action-NCodeBuilder-CodeBuilder_string_object-).md 'NCodeBuilder.CodeBuilder.Iterate(object, System.Action&lt;NCodeBuilder.CodeBuilder,string,object&gt;)')
