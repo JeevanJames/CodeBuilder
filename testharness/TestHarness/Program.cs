@@ -33,7 +33,7 @@ namespace TestHarness
         {
             string[] enumValues = { "Earth", "Water", "Fire", "Air" };
 
-            LanguageProvider language = LanguageProvider.CSharp();
+            LanguageProvider language = LanguageProvider.CSharp(NCodeBuilder.CLanguageFamily.CLanguageBraceStyle.SameLine);
             //LanguageProvider language = LanguageProvider.Python;
             CodeBuilder builder = new CodeBuilder(language)
                 .MultiLineComment(
@@ -52,7 +52,6 @@ namespace TestHarness
                         .Block("public MyClass(string value)")
                             .Line("_value = value;")
                         .EndBlock()
-                        .Section(() => true)
                         .Blank
                         .DocComments(
                             "Does something with the provided value.",
@@ -61,15 +60,20 @@ namespace TestHarness
                             .Try()
                                 .If("DateTime.Now.DayOfWeek == DayOfWeek.Monday")
                                     .Line("WriteLine(_value);")
-                                .EndBlock()
+                                .ElseIf("DateTime.Now.DayOfWeek == DayOfWeek.Wednesday")
+                                    .Line(@"WriteLine(""Boring"");")
+                                .Else()
+                                    .Line(@"WriteLine(""Yay, almost there"");")
+                                .EndIf()
+                            .Catch<InvalidOperationException>()
+                                .Line(@"WriteLine(""Invalid operation"")")
                             .Catch<Exception>("ex")
-                                .Section(true)
                                 .Comment((CodeFactory)(() => $"Error at {DateTime.Now:f}"))
                                 .Line("WriteLine(ex.Message);")
-                                .EndSection()
+                            .Finally()
+                                .Line(@"WriteLine(""Done with method"");")
                             .EndTry()
                         .EndBlock()
-                        .EndSection()
                     .EndBlock()
                     .Blank
                     .Generate(Enums, enumValues)

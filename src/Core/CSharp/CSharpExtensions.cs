@@ -33,6 +33,8 @@ namespace NCodeBuilder.CSharp
 
         public static CodeBuilder EndNamespace(this CodeBuilder cb) => cb.EndBlock("namespace");
 
+        private const string IfElseIfElseBlock = "if-elseif-else";
+
         public static CodeBuilder If(this CodeBuilder cb, params string[] conditions)
         {
             return cb.Repeat(conditions, (cb2, s) => cb2
@@ -44,7 +46,33 @@ namespace NCodeBuilder.CSharp
                         .Line($"{s.Item})", s.IsLast)
                         .Unindent
                     .EndSection())
-                .Block();
+                .Block(context: IfElseIfElseBlock);
+        }
+
+        public static CodeBuilder ElseIf(this CodeBuilder cb, params string[] conditions)
+        {
+            return cb.EndBlock(IfElseIfElseBlock)
+                .Repeat(conditions, (cb2, s) => cb2
+                    .Line($"else if ({s.Item})", s.Count == 1)
+                    .Line($"else if ({s.Item}", s.Count > 1 && s.IsFirst)
+                    .Section(s.Count > 1)
+                        .Indent
+                        .Line(s.Item, !s.IsFirst && !s.IsLast)
+                        .Line($"{s.Item})", s.IsLast)
+                        .Unindent
+                    .EndSection())
+                .Block(context: IfElseIfElseBlock);
+        }
+
+        public static CodeBuilder Else(this CodeBuilder cb)
+        {
+            return cb.EndBlock(IfElseIfElseBlock)
+                .Block("else", IfElseIfElseBlock);
+        }
+
+        public static CodeBuilder EndIf(this CodeBuilder cb)
+        {
+            return cb.EndBlock(IfElseIfElseBlock);
         }
 
         private const string TryCatchFinallyBlock = "try-catch-finally";

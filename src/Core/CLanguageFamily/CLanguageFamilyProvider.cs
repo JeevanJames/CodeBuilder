@@ -41,8 +41,8 @@ namespace NCodeBuilder.CLanguageFamily
                 {
                     CLanguageBraceStyle.NextLine when line is null => cb.Line("{").Indent,
                     CLanguageBraceStyle.NextLine => cb.Line(line).Line("{").Indent,
-                    CLanguageBraceStyle.SameLine when line is null => cb.Line($"{line} {{").Indent,
-                    CLanguageBraceStyle.SameLine => cb.Indent,
+                    CLanguageBraceStyle.SameLine when line is null => cb.Indent,
+                    CLanguageBraceStyle.SameLine => cb.Line($"{line} {{").Indent,
                     _ => throw new InvalidOperationException($"Unexpected brace style specified: {BraceStyle}."),
                 };
             };
