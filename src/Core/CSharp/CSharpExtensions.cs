@@ -18,6 +18,7 @@ limitations under the License.
 */
 #endregion
 
+// ReSharper disable ArrangeMethodOrOperatorBody
 namespace NCodeBuilder.CSharp
 {
     public static class CSharpExtensions
@@ -29,7 +30,8 @@ namespace NCodeBuilder.CSharp
         public static CodeBuilder UsingAlias(this CodeBuilder cb, string alias, string value)
             => cb.Line($"using {alias} = {value};");
 
-        public static CodeBuilder Namespace(this CodeBuilder cb, string ns) => cb.Block($"namespace {ns}", "namespace");
+        public static CodeBuilder Namespace(this CodeBuilder cb, string ns)
+            => cb.Block($"namespace {ns}", "namespace");
 
         public static CodeBuilder EndNamespace(this CodeBuilder cb) => cb.EndBlock("namespace");
 

@@ -20,12 +20,11 @@ limitations under the License.
 
 using System;
 
-using NCodeBuilder;
 using NCodeBuilder.CSharp;
 
 using static System.Console;
 
-namespace TestHarness
+namespace NCodeBuilder.TestHarness
 {
     internal static class Program
     {
@@ -33,12 +32,12 @@ namespace TestHarness
         {
             string[] enumValues = { "Earth", "Water", "Fire", "Air" };
 
-            var language = LanguageProvider.CSharp(NCodeBuilder.CLanguageFamily.CLanguageBraceStyle.SameLine);
+            var language = LanguageProvider.CSharp(NCodeBuilder.CLanguageFamily.CLanguageBraceStyle.NextLine);
             //LanguageProvider language = LanguageProvider.Python;
             CodeBuilder builder = new CodeBuilder(language)
                 .MultiLineComment(
                     "CodeBuilder framework",
-                    "Copyright (c) 2019-2020 Jeevan James")
+                    "Copyright (c) 2019-2021 Jeevan James")
                 .Blank
                 .Using("System")
                 .Using("System.Linq")
@@ -88,7 +87,6 @@ namespace TestHarness
             code.Block("public enum Elements")
                 .Repeat(enumValues, (cb, s) => cb.Inline(s.Item).Add(",", !s.IsLast).Done())
                 .EndBlock();
-
         }
     }
 }
