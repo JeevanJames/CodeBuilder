@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2. See LICENSE file in the project root for full license information.
 
 // ReSharper disable ArrangeMethodOrOperatorBody
+
 namespace NCodeBuilder.CSharp;
 
 public static class CSharpExtensions
@@ -70,11 +71,15 @@ public static class CSharpExtensions
 
     public static CodeBuilder Catch<TException>(this CodeBuilder cb, string? variable = null, string? filter = null)
     {
-        return Catch(cb, typeof(TException).FullName, variable, filter);
+        return Catch(cb, CSharpHelpers.GetFriendlyTypeName(typeof(TException)), variable, filter);
     }
 
     public static CodeBuilder Finally(this CodeBuilder cb)
         => cb.EndBlock(TryCatchFinallyBlock).Block("finally", TryCatchFinallyBlock);
 
     public static CodeBuilder EndTry(this CodeBuilder cb) => cb.EndBlock(TryCatchFinallyBlock);
+
+    public static ClassBuilder Class(this CodeBuilder cb, string className) => new(cb, className);
+
+    public static CodeBuilder EndClass(this CodeBuilder cb) => cb.EndBlock("csharp_class");
 }

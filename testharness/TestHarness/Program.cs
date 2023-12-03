@@ -2,7 +2,9 @@
 // Licensed under the Apache License, Version 2. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Collections.Generic;
 
+using NCodeBuilder.CLanguageFamily;
 using NCodeBuilder.CSharp;
 
 using static System.Console;
@@ -16,26 +18,26 @@ internal static class Program
         string[] enumValues = { "Earth", "Water", "Fire", "Air" };
 
             // @formatter:off
-            var language = LanguageProvider.CSharp(NCodeBuilder.CLanguageFamily.CLanguageBraceStyle.NextLine);
+            var language = LanguageProvider.CSharp();
             //LanguageProvider language = LanguageProvider.Python;
             CodeBuilder builder = new CodeBuilder(language)
                 .MultiLineComment(
                     "CodeBuilder framework",
                     "Copyright (c) 2019-2023 Jeevan James")
-                .Blank
+                .__
                 .Using("System")
                 .Using("System.Linq")
                 .UsingStatic("System.Console")
-                .Blank
+                .__
                 .Namespace("MyCode")
                     .DocComments("The main class to do stuff")
-                    .Block("public sealed class MyClass")
+                    .Class("MyClass").Public.Sealed.Partial.Inherits<Comparer<string>>().Implements<IEnumerable<string>>().x
                         ._("private readonly string _value;")
-                        .Blank
+                        .__
                         .Block("public MyClass(string value)")
                             ._("_value = value;")
                         .EndBlock()
-                        .Blank
+                        .__
                         .DocComments(
                             "Does something with the provided value.",
                             "Does not return anything")
@@ -60,8 +62,8 @@ internal static class Program
                                 ._(@"WriteLine(""Done with method"");")
                             .EndTry()
                         .EndBlock()
-                    .EndBlock()
-                    .Blank
+                    .EndClass()
+                    .__
                     .Generate(Enums, enumValues)
                 .EndNamespace();
         // @formatter:on

@@ -46,14 +46,12 @@ public sealed class CodeBuilder
     /// <summary>
     ///     Adds a blank line.
     /// </summary>
-    public CodeBuilder Blank
+    public CodeBuilder __
     {
         get
         {
-            if (!_canEmit)
-                return this;
-
-            _builder.AppendLine();
+            if (_canEmit)
+                _builder.AppendLine();
             return this;
         }
     }

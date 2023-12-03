@@ -29,7 +29,7 @@
                 which does not provide any language enhancements.
             </param>
         </member>
-        <member name="P:NCodeBuilder.CodeBuilder.Blank">
+        <member name="P:NCodeBuilder.CodeBuilder.__">
             <summary>
                 Adds a blank line.
             </summary>

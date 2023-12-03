@@ -61,3 +61,17 @@ public sealed class InlineCodeBuilder
         return _builder;
     }
 }
+
+public abstract class InnerBuilder
+{
+    protected InnerBuilder(CodeBuilder builder)
+    {
+        Builder = builder ?? throw new ArgumentNullException(nameof(builder));
+    }
+
+    protected CodeBuilder Builder { get; }
+
+    public virtual CodeBuilder Done() => Builder;
+
+    public CodeBuilder x => Done();
+}

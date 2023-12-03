@@ -13,7 +13,7 @@ public record CLanguageFamilyProvider : LanguageProvider
         CommentBuilder = (code, comment) => code._($"// {comment}");
         MultiLineCommentBuilder = (code, comments) => code
             ._("/*")
-            .Repeat(comments, (cb, comment) => cb._($"    {comment}"))
+            .Repeat(comments, (cb, s) => cb._($"    {s.Item}"))
             ._("*/");
         StartBlockBuilder = (cb, code) =>
         {
