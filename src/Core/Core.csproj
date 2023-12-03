@@ -4,8 +4,9 @@
         <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
         <RootNamespace>NCodeBuilder</RootNamespace>
         <AssemblyName>$(RootNamespace)</AssemblyName>
-        <LangVersion>9.0</LangVersion>
+        <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
 
         <NoWarn>1701;1702;1591</NoWarn>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>

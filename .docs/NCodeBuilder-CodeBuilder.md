@@ -27,7 +27,7 @@ Inheritance [System.Object](https://docs.microsoft.com/en-us/dotnet/api/System.O
 - [EndBlock(string?)](./NCodeBuilder-CodeBuilder-EndBlock(string-).md 'NCodeBuilder.CodeBuilder.EndBlock(string?)')
 - [EndSection()](./NCodeBuilder-CodeBuilder-EndSection().md 'NCodeBuilder.CodeBuilder.EndSection()')
 - [Generate(System.Action&lt;NCodeBuilder.CodeBuilder&gt;, bool)](./NCodeBuilder-CodeBuilder-Generate(System-Action-NCodeBuilder-CodeBuilder-_bool).md 'NCodeBuilder.CodeBuilder.Generate(System.Action&lt;NCodeBuilder.CodeBuilder&gt;, bool)')
-- [Iterate(object, System.Action&lt;NCodeBuilder.CodeBuilder,string,object&gt;)](./NCodeBuilder-CodeBuilder-Iterate(object_System-Action-NCodeBuilder-CodeBuilder_string_object-).md 'NCodeBuilder.CodeBuilder.Iterate(object, System.Action&lt;NCodeBuilder.CodeBuilder,string,object&gt;)')
+- [Iterate(object?, System.Action&lt;NCodeBuilder.CodeBuilder,string,object?&gt;)](./NCodeBuilder-CodeBuilder-Iterate(object-_System-Action-NCodeBuilder-CodeBuilder_string_object--).md 'NCodeBuilder.CodeBuilder.Iterate(object?, System.Action&lt;NCodeBuilder.CodeBuilder,string,object?&gt;)')
 - [Line(NCodeBuilder.CodeLine)](./NCodeBuilder-CodeBuilder-Line(NCodeBuilder-CodeLine).md 'NCodeBuilder.CodeBuilder.Line(NCodeBuilder.CodeLine)')
 - [Line(NCodeBuilder.CodeLine, bool)](./NCodeBuilder-CodeBuilder-Line(NCodeBuilder-CodeLine_bool).md 'NCodeBuilder.CodeBuilder.Line(NCodeBuilder.CodeLine, bool)')
 - [Line(NCodeBuilder.CodeLine, System.Func&lt;bool&gt;)](./NCodeBuilder-CodeBuilder-Line(NCodeBuilder-CodeLine_System-Func-bool-).md 'NCodeBuilder.CodeBuilder.Line(NCodeBuilder.CodeLine, System.Func&lt;bool&gt;)')
