@@ -7,13 +7,13 @@ namespace NCodeBuilder.CSharp;
 public static class CSharpExtensions
 {
     public static CodeBuilder Using(this CodeBuilder cb, string ns) =>
-        cb.Line($"using {ns};");
+        cb._($"using {ns};");
 
     public static CodeBuilder UsingStatic(this CodeBuilder cb, string ns) =>
-        cb.Line($"using static {ns};");
+        cb._($"using static {ns};");
 
     public static CodeBuilder UsingAlias(this CodeBuilder cb, string alias, string value) =>
-        cb.Line($"using {alias} = {value};");
+        cb._($"using {alias} = {value};");
 
     public static CodeBuilder Namespace(this CodeBuilder cb, string ns) =>
         cb.Block($"namespace {ns}", "namespace");
@@ -24,12 +24,12 @@ public static class CSharpExtensions
 
     public static CodeBuilder If(this CodeBuilder cb, params string[] conditions) => cb
         .Repeat(conditions, (cb2, s) => cb2
-            .Line($"if ({s.Item})", s.Count == 1)
-            .Line($"if ({s.Item}", s.Count > 1 && s.IsFirst)
+            ._($"if ({s.Item})", s.Count == 1)
+            ._($"if ({s.Item}", s.Count > 1 && s.IsFirst)
             .Section(s.Count > 1)
                 .Indent
-                    .Line(s.Item, !s.IsFirst && !s.IsLast)
-                    .Line($"{s.Item})", s.IsLast)
+                    ._(s.Item, !s.IsFirst && !s.IsLast)
+                    ._($"{s.Item})", s.IsLast)
                 .Unindent
             .EndSection())
         .Block(context: IfElseIfElseBlock);
@@ -37,12 +37,12 @@ public static class CSharpExtensions
     public static CodeBuilder ElseIf(this CodeBuilder cb, params string[] conditions) => cb
         .EndBlock(IfElseIfElseBlock)
         .Repeat(conditions, (cb2, s) => cb2
-            .Line($"else if ({s.Item})", s.Count == 1)
-            .Line($"else if ({s.Item}", s.Count > 1 && s.IsFirst)
+            ._($"else if ({s.Item})", s.Count == 1)
+            ._($"else if ({s.Item}", s.Count > 1 && s.IsFirst)
             .Section(s.Count > 1)
             .Indent
-            .Line(s.Item, !s.IsFirst && !s.IsLast)
-            .Line($"{s.Item})", s.IsLast)
+            ._(s.Item, !s.IsFirst && !s.IsLast)
+            ._($"{s.Item})", s.IsLast)
             .Unindent
             .EndSection())
         .Block(context: IfElseIfElseBlock);

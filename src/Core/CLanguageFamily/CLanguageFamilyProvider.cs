@@ -10,24 +10,24 @@ public record CLanguageFamilyProvider : LanguageProvider
         : base(name)
     {
         IndentSize = 4;
-        CommentBuilder = (code, comment) => code.Line($"// {comment}");
+        CommentBuilder = (code, comment) => code._($"// {comment}");
         MultiLineCommentBuilder = (code, comments) => code
-            .Line("/*")
-            .Repeat(comments, (cb, comment) => cb.Line($"    {comment}"))
-            .Line("*/");
+            ._("/*")
+            .Repeat(comments, (cb, comment) => cb._($"    {comment}"))
+            ._("*/");
         StartBlockBuilder = (cb, code) =>
         {
             string? line = code?.ToString();
             _ = BraceStyle switch
             {
-                CLanguageBraceStyle.NextLine when line is null => cb.Line("{").Indent,
-                CLanguageBraceStyle.NextLine => cb.Line(line).Line("{").Indent,
+                CLanguageBraceStyle.NextLine when line is null => cb._("{").Indent,
+                CLanguageBraceStyle.NextLine => cb._(line)._("{").Indent,
                 CLanguageBraceStyle.SameLine when line is null => cb.Indent,
-                CLanguageBraceStyle.SameLine => cb.Line($"{line} {{").Indent,
+                CLanguageBraceStyle.SameLine => cb._($"{line} {{").Indent,
                 _ => throw new InvalidOperationException($"Unexpected brace style specified: {BraceStyle}."),
             };
         };
-        EndBlockBuilder = code => code.Unindent.Line("}");
+        EndBlockBuilder = code => code.Unindent._("}");
         BraceStyle = braceStyle;
     }
 

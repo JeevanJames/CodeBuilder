@@ -47,7 +47,7 @@
                 Thrown if an attempt is made to unindent below 0.
             </exception>
         </member>
-        <member name="M:NCodeBuilder.CodeBuilder.Line(NCodeBuilder.CodeLine)">
+        <member name="M:NCodeBuilder.CodeBuilder._(NCodeBuilder.CodeLine)">
             <summary>
                 Adds a line of <paramref name="code"/>. If the code is <c>null</c>, nothing is added.
             </summary>
@@ -61,7 +61,7 @@
                 An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
             </returns>
         </member>
-        <member name="M:NCodeBuilder.CodeBuilder.Line(NCodeBuilder.CodeLine,System.Func{System.Boolean})">
+        <member name="M:NCodeBuilder.CodeBuilder._(NCodeBuilder.CodeLine,System.Func{System.Boolean})">
             <summary>
                 Adds a line of <paramref name="code"/> if the specified <paramref name="predicate"/> is
                 <c>true</c>.
@@ -77,7 +77,7 @@
                 An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
             </returns>
         </member>
-        <member name="M:NCodeBuilder.CodeBuilder.Line(NCodeBuilder.CodeLine,System.Boolean)">
+        <member name="M:NCodeBuilder.CodeBuilder._(NCodeBuilder.CodeLine,System.Boolean)">
             <summary>
                 Adds a line of <paramref name="code"/> if the specified <paramref name="condition"/> is
                 <c>true</c>.
@@ -325,6 +325,41 @@
             </summary>
         </member>
         <member name="P:NCodeBuilder.RepeatState`1.IsLast">
+            <summary>
+                Gets a value indicating whether the current iteration item is the last item in the
+                collection.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.DictionaryRepeatState`2.Dictionary">
+            <summary>
+                Gets the reference to the collection being iterated over.
+                <para/>
+                Use this property instead of directly accessing the collection to prevent unnecessary
+                closures.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.DictionaryRepeatState`2.Key">
+            <summary>
+                Gets the current iterated item in the collection.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.DictionaryRepeatState`2.Index">
+            <summary>
+                Gets the index of the current iterated item in the collection.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.DictionaryRepeatState`2.Count">
+            <summary>
+                Gets the number of items in the collection.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.DictionaryRepeatState`2.IsFirst">
+            <summary>
+                Gets a value indicating whether the current iteration item is the first item in the
+                collection.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.DictionaryRepeatState`2.IsLast">
             <summary>
                 Gets a value indicating whether the current iteration item is the last item in the
                 collection.

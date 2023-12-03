@@ -28,24 +28,24 @@ public partial record LanguageProvider
         return new CLanguageFamilyProvider("C#", braceStyle)
         {
             DocumentationCommentBuilder = (cb, comments) => cb
-                .Line("/// <summary>")
-                .Repeat(comments, (cb2, s) => cb2.Line($"///     {s.Item}"))
-                .Line("/// </summary>"),
+                ._("/// <summary>")
+                .Repeat(comments, (cb2, s) => cb2._($"///     {s.Item}"))
+                ._("/// </summary>"),
         };
     }
 
     public static LanguageProvider Python = new LanguageProvider("Python")
     {
         IndentSize = 4,
-        CommentBuilder = (cb, comment) => cb.Line($"# {comment}"),
+        CommentBuilder = (cb, comment) => cb._($"# {comment}"),
         DocumentationCommentBuilder = (cb, comments) => cb
             .Repeat(comments, static (cb2, s) => cb2
                 .Inline(@""""""" ", s.IsFirst)
-                .Add(s.Item.ToString())
-                .Add(@" """"""", s.Count == 1)
+                ._(s.Item.ToString())
+                ._(@" """"""", s.Count == 1)
                 .Done())
-            .Line(@"""""""", comments.Count() > 1),
-        StartBlockBuilder = (cb, code) => _ = cb.Line(code.ToString()).Indent,
+            ._(@"""""""", comments.Count() > 1),
+        StartBlockBuilder = (cb, code) => _ = cb._(code.ToString()).Indent,
         EndBlockBuilder = cb => _ = cb.Unindent,
     };
 
@@ -61,7 +61,7 @@ public partial record LanguageProvider
         CommentBuilder = (_, _) => { },
         MultiLineCommentBuilder = (_, _) => { },
         DocumentationCommentBuilder = (_, _) => { },
-        StartBlockBuilder = (cb, code) => cb.Indent.Line(code.ToString()),
+        StartBlockBuilder = (cb, code) => cb.Indent._(code.ToString()),
         EndBlockBuilder = cb => _ = cb.Unindent,
     };
 }

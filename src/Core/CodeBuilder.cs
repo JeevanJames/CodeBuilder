@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2019-23 Jeevan James
 // Licensed under the Apache License, Version 2. See LICENSE file in the project root for full license information.
 
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
@@ -104,7 +105,7 @@ public sealed class CodeBuilder
     /// <returns>
     ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
     /// </returns>
-    public CodeBuilder Line(CodeLine code)
+    public CodeBuilder _(CodeLine code)
     {
         if (!_canEmit)
             return this;
@@ -133,13 +134,13 @@ public sealed class CodeBuilder
     /// <returns>
     ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
     /// </returns>
-    public CodeBuilder Line(CodeLine code, Func<bool> predicate)
+    public CodeBuilder _(CodeLine code, Func<bool> predicate)
     {
         if (!_canEmit)
             return this;
 
         if (predicate())
-            Line(code);
+            _(code);
         return this;
     }
 
@@ -157,13 +158,13 @@ public sealed class CodeBuilder
     /// <returns>
     ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
     /// </returns>
-    public CodeBuilder Line(CodeLine code, bool condition)
+    public CodeBuilder _(CodeLine code, bool condition)
     {
         if (!_canEmit)
             return this;
 
         if (condition)
-            Line(code);
+            _(code);
         return this;
     }
 
@@ -202,6 +203,22 @@ public sealed class CodeBuilder
         return this;
     }
 
+    public CodeBuilder Repeat<TKey, TValue>(IDictionary<TKey, TValue> dictionary,
+        Action<CodeBuilder, DictionaryRepeatState<TKey, TValue>> action)
+    {
+        if (!_canEmit)
+            return this;
+
+        int index = 0;
+        foreach (KeyValuePair<TKey, TValue> kvp in dictionary)
+        {
+            action(this, new DictionaryRepeatState<TKey, TValue>(dictionary, kvp.Key, kvp.Value, index));
+            index++;
+        }
+
+        return this;
+    }
+
     /// <summary>
     ///     Iterates over all public, non-indexer properties in the specified <paramref name="obj"/>
     ///     and executes the specified <paramref name="action"/> on each property.
@@ -229,7 +246,7 @@ public sealed class CodeBuilder
 
         return this;
     }
-
+     
     /// <summary>
     ///     Starts a new code block. This is language-specific and what exactly happens depends on
     ///     the implementation in the underlying language provider.

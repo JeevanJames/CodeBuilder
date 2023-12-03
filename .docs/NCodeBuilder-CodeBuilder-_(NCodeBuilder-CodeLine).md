@@ -1,12 +1,12 @@
 #### [NCodeBuilder](./index.md 'index')
 ### [NCodeBuilder](./NCodeBuilder.md 'NCodeBuilder').[CodeBuilder](./NCodeBuilder-CodeBuilder.md 'NCodeBuilder.CodeBuilder')
-## CodeBuilder.Line(NCodeBuilder.CodeLine) Method
-Adds a line of [code](#NCodeBuilder-CodeBuilder-Line(NCodeBuilder-CodeLine)-code 'NCodeBuilder.CodeBuilder.Line(NCodeBuilder.CodeLine).code'). If the code is `null`, nothing is added.  
+## CodeBuilder._(NCodeBuilder.CodeLine) Method
+Adds a line of [code](#NCodeBuilder-CodeBuilder-_(NCodeBuilder-CodeLine)-code 'NCodeBuilder.CodeBuilder._(NCodeBuilder.CodeLine).code'). If the code is `null`, nothing is added.  
 ```csharp
-public NCodeBuilder.CodeBuilder Line(NCodeBuilder.CodeLine code);
+public NCodeBuilder.CodeBuilder _(NCodeBuilder.CodeLine code);
 ```
 #### Parameters
-<a name='NCodeBuilder-CodeBuilder-Line(NCodeBuilder-CodeLine)-code'></a>
+<a name='NCodeBuilder-CodeBuilder-_(NCodeBuilder-CodeLine)-code'></a>
 `code` [CodeLine](./NCodeBuilder-CodeLine.md 'NCodeBuilder.CodeLine')  
 The code line to add.  
 

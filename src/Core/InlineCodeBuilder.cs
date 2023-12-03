@@ -18,32 +18,18 @@ public sealed class InlineCodeBuilder
     internal InlineCodeBuilder(CodeBuilder builder, string? str, bool condition)
         : this(builder)
     {
-        Add(str, condition);
+        _(str, condition);
     }
 
     internal InlineCodeBuilder(CodeBuilder builder, string? str, Func<bool> predicate)
         : this(builder)
     {
-        Add(str, predicate);
-    }
-
-    public InlineCodeBuilder Add(string? str, bool condition = true)
-    {
-        if (condition && str is not null)
-            _inlineBuilder.Append(str);
-        return this;
+        _(str, predicate);
     }
 
     public InlineCodeBuilder _(string? str, bool condition = true)
     {
         if (condition && str is not null)
-            _inlineBuilder.Append(str);
-        return this;
-    }
-
-    public InlineCodeBuilder Add(string? str, Func<bool> predicate)
-    {
-        if (str is not null && predicate())
             _inlineBuilder.Append(str);
         return this;
     }
@@ -71,7 +57,7 @@ public sealed class InlineCodeBuilder
 
     public CodeBuilder Done()
     {
-        _builder.Line(_inlineBuilder.ToString());
+        _builder._(_inlineBuilder.ToString());
         return _builder;
     }
 }
