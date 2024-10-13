@@ -1,18 +1,16 @@
 ﻿// Copyright (c) 2019-23 Jeevan James
 // Licensed under the Apache License, Version 2. See LICENSE file in the project root for full license information.
 
-using System.Text;
-
 namespace NCodeBuilder;
 
 public sealed class InlineCodeBuilder
 {
     private readonly CodeBuilder _builder;
-    private readonly StringBuilder _inlineBuilder = new(); //TODO: Use the parent code builder's StringBuilder
 
     internal InlineCodeBuilder(CodeBuilder builder)
     {
-        _builder = builder;
+        _builder = builder ?? throw new ArgumentNullException(nameof(builder));
+        _builder.StringBuilder((sb, cb) => sb.Append(cb!.GetIndent()), state: builder);
     }
 
     internal InlineCodeBuilder(CodeBuilder builder, string? str, bool condition)
@@ -30,15 +28,24 @@ public sealed class InlineCodeBuilder
     public InlineCodeBuilder _(string? str, bool condition = true)
     {
         if (condition && str is not null)
-            _inlineBuilder.Append(str);
+            _builder.StringBuilder(sb => sb.Append(str), condition);
         return this;
     }
 
     public InlineCodeBuilder _(string? str, Func<bool> predicate)
     {
         if (str is not null && predicate())
-            _inlineBuilder.Append(str);
+            _builder.StringBuilder(sb => sb.Append(str), predicate);
         return this;
+    }
+
+    public InlineCodeBuilder __
+    {
+        get
+        {
+            _builder.StringBuilder(sb => sb.Append(' '));
+            return this;
+        }
     }
 
     public InlineCodeBuilder Repeat<T>(IEnumerable<T> collection,
@@ -57,21 +64,6 @@ public sealed class InlineCodeBuilder
 
     public CodeBuilder Done()
     {
-        _builder._(_inlineBuilder.ToString());
-        return _builder;
+        return _builder.StringBuilder(sb => sb.AppendLine());
     }
-}
-
-public abstract class InnerBuilder
-{
-    protected InnerBuilder(CodeBuilder builder)
-    {
-        Builder = builder ?? throw new ArgumentNullException(nameof(builder));
-    }
-
-    protected CodeBuilder Builder { get; }
-
-    public virtual CodeBuilder Done() => Builder;
-
-    public CodeBuilder x => Done();
 }

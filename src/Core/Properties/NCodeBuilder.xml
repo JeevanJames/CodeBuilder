@@ -29,7 +29,7 @@
                 which does not provide any language enhancements.
             </param>
         </member>
-        <member name="P:NCodeBuilder.CodeBuilder.__">
+        <member name="P:NCodeBuilder.CodeBuilder._____">
             <summary>
                 Adds a blank line.
             </summary>
@@ -363,6 +363,12 @@
             <summary>
                 Gets a value indicating whether the current iteration item is the last item in the
                 collection.
+            </summary>
+        </member>
+        <member name="T:NCodeBuilder.InnerBuilder">
+            <summary>
+                Base class for inner builder classes - which construct well known statements in a strongly-typed
+                manner.
             </summary>
         </member>
         <member name="T:NCodeBuilder.LanguageProvider">

@@ -5,6 +5,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <RootNamespace>NCodeBuilder.TestHarness</RootNamespace>
         <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>

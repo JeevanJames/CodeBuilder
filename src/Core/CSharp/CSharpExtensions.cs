@@ -3,6 +3,10 @@
 
 // ReSharper disable ArrangeMethodOrOperatorBody
 
+using System.Runtime.CompilerServices;
+
+using NCodeBuilder.CSharp.Builders;
+
 namespace NCodeBuilder.CSharp;
 
 public static class CSharpExtensions
@@ -18,6 +22,9 @@ public static class CSharpExtensions
 
     public static CodeBuilder Namespace(this CodeBuilder cb, string ns) =>
         cb.Block($"namespace {ns}", "namespace");
+
+    public static CodeBuilder NamespaceFileScoped(this CodeBuilder cb, string ns) =>
+        cb._($"namespace {ns};");
 
     public static CodeBuilder EndNamespace(this CodeBuilder cb) => cb.EndBlock("namespace");
 
@@ -82,4 +89,44 @@ public static class CSharpExtensions
     public static ClassBuilder Class(this CodeBuilder cb, string className) => new(cb, className);
 
     public static CodeBuilder EndClass(this CodeBuilder cb) => cb.EndBlock("csharp_class");
+
+    public static ClassMethodBuilder Method(this CodeBuilder cb, string methodName) =>
+        new(cb, methodName);
+
+    public static CodeBuilder EndMethod(this CodeBuilder cb) => cb.EndBlock("csharp_method");
+
+    public static AutoPropertyBuilder AutoProperty(this CodeBuilder cb, string propertyName, string propertyType) =>
+        new(cb, propertyName, propertyType);
+
+    public static AutoPropertyBuilder AutoProperty<TType>(this CodeBuilder cb, string propertyName) =>
+        new(cb, propertyName, CSharpHelpers.GetFriendlyTypeName(typeof(TType)));
+
+    public static FieldBuilder Field(this CodeBuilder cb, string name, string type) =>
+        new(cb, name, type);
+
+    public static FieldBuilder Field<TType>(this CodeBuilder cb, string name) =>
+        new(cb, name, CSharpHelpers.GetFriendlyTypeName(typeof(TType)));
+
+    public static EnumBuilder Enum(this CodeBuilder cb, string enumName) =>
+        new(cb, enumName);
+
+    public static CodeBuilder EndEnum(this CodeBuilder cb) => cb.EndBlock("csharp_enum");
+
+    public static CodeBuilder EnumMember(this CodeBuilder cb, string memberName, int? value = null) =>
+        cb.Inline(memberName)._($" = {value!.Value}", value.HasValue).Done();
+
+    public static InterfaceBuilder Interface(this CodeBuilder cb, string interfaceName) =>
+        new(cb, interfaceName);
+
+    public static CodeBuilder EndInterface(this CodeBuilder cb) => cb.EndBlock("csharp_interface");
+
+    public static InterfaceMethodBuilder InterfaceMethod(this CodeBuilder cb, string methodName) =>
+        new(cb, methodName);
+}
+
+public static class Literal
+{
+    public const string Null = "null";
+
+    public static string AsString(string value) => $@"""{value}""";
 }

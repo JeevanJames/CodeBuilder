@@ -3,15 +3,17 @@ using System.CodeDom.Compiler;
 
 namespace NCodeBuilder.CSharp;
 
-public static class CSharpHelpers
+internal static class CSharpHelpers
 {
-    public static string GetFriendlyTypeName(Type type)
+    internal static string GetFriendlyTypeName(Type type)
     {
-        var codeDomProvider = CodeDomProvider.CreateProvider("C#");
-        var typeReferenceExpression = new CodeTypeReferenceExpression(new CodeTypeReference(type));
+        CodeDomProvider codeDomProvider = CodeDomProvider.CreateProvider("C#");
+        CodeTypeReferenceExpression typeReferenceExpression = new(new CodeTypeReference(type));
 
-        using var writer = new StringWriter();
+        using StringWriter writer = new();
         codeDomProvider.GenerateCodeFromExpression(typeReferenceExpression, writer, new CodeGeneratorOptions());
         return writer.GetStringBuilder().ToString();
     }
+
+    internal static string GetFriendlyTypeName<T>() => GetFriendlyTypeName(typeof(T));
 }

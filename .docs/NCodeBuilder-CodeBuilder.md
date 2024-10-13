@@ -15,7 +15,7 @@ Inheritance [System.Object](https://docs.microsoft.com/en-us/dotnet/api/System.O
 ### Constructors
 - [CodeBuilder(NCodeBuilder.LanguageProvider?)](./NCodeBuilder-CodeBuilder-CodeBuilder(NCodeBuilder-LanguageProvider-).md 'NCodeBuilder.CodeBuilder.CodeBuilder(NCodeBuilder.LanguageProvider?)')
 ### Properties
-- [__](./NCodeBuilder-CodeBuilder-__.md 'NCodeBuilder.CodeBuilder.__')
+- [_____](./NCodeBuilder-CodeBuilder-_____.md 'NCodeBuilder.CodeBuilder._____')
 - [Indent](./NCodeBuilder-CodeBuilder-Indent.md 'NCodeBuilder.CodeBuilder.Indent')
 - [Unindent](./NCodeBuilder-CodeBuilder-Unindent.md 'NCodeBuilder.CodeBuilder.Unindent')
 ### Methods

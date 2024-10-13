@@ -2,6 +2,7 @@
 ## NCodeBuilder Namespace
 ### Classes
 - [CodeBuilder](./NCodeBuilder-CodeBuilder.md 'NCodeBuilder.CodeBuilder')
+- [InnerBuilder](./NCodeBuilder-InnerBuilder.md 'NCodeBuilder.InnerBuilder')
 - [LanguageProvider](./NCodeBuilder-LanguageProvider.md 'NCodeBuilder.LanguageProvider')
 ### Structs
 - [CodeLine](./NCodeBuilder-CodeLine.md 'NCodeBuilder.CodeLine')

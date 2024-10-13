@@ -1,11 +1,12 @@
-﻿using System.Reflection;
+﻿// Copyright (c) 2019-23 Jeevan James
+// Licensed under the Apache License, Version 2. See LICENSE file in the project root for full license information.
 
-namespace NCodeBuilder.CSharp;
+using NCodeBuilder.CSharp.Bases;
 
-public sealed class ClassBuilder : InnerBuilder
+namespace NCodeBuilder.CSharp.Builders;
+
+public sealed class ClassBuilder : TypeBuilder<ClassBuilder>
 {
-    private readonly string _className;
-    private bool _internal;
     private bool _static;
     private bool _abstract;
     private bool _sealed;
@@ -13,62 +14,28 @@ public sealed class ClassBuilder : InnerBuilder
     private string? _baseClassName;
     private List<string>? _interfaces;
 
-    public ClassBuilder(CodeBuilder builder, string className) : base(builder)
+    public ClassBuilder(CodeBuilder builder, string className) : base(builder, className)
     {
-        _className = className;
-    }
-
-    public ClassBuilder Public
-    {
-        get
-        {
-            _internal = false;
-            return this;
-        }
-    }
-
-    public ClassBuilder Internal
-    {
-        get
-        {
-            _internal = true;
-            return this;
-        }
     }
 
     public ClassBuilder Static
     {
-        get
-        {
-            _static = true;
-            return this;
-        }
+        get { _static = true; return this; }
     }
 
     public ClassBuilder Abstract
     {
-        get
-        {
-            _abstract = true;
-            return this;
-        }
+        get { _abstract = true; return this; }
     }
 
     public ClassBuilder Sealed
     {
-        get
-        {
-            _sealed = true;
-            return this;
-        }
+        get { _sealed = true; return this; }
     }
+
     public ClassBuilder Partial
     {
-        get
-        {
-            _partial = true;
-            return this;
-        }
+        get { _partial = true; return this; }
     }
 
     public ClassBuilder Inherits(string baseClassName)
@@ -95,7 +62,7 @@ public sealed class ClassBuilder : InnerBuilder
     {
         if (!typeof(T).IsInterface)
             throw new InvalidOperationException($"{typeof(T)} is not an interface.");
-        
+
         return Implements(CSharpHelpers.GetFriendlyTypeName(typeof(T)));
     }
 
@@ -117,15 +84,15 @@ public sealed class ClassBuilder : InnerBuilder
         }
 
         return Builder
-            .Inline("public ", !_internal)
-            ._("internal ", _internal)
-            ._("static ", _static)
-            ._("abstract ", _abstract)
-            ._("sealed ", _sealed)
-            ._("partial ", _partial)
-            ._(_className)
-            ._($" : {string.Join(", ", inheriting)}", inheriting is not null)
-            .Done()
+            .Inline(AccessibilityStr)
+                ._(" ")
+                ._("static ", _static)
+                ._("abstract ", _abstract)
+                ._("sealed ", _sealed)
+                ._("partial ", _partial)
+                ._(TypeName)
+                ._($" : {string.Join(", ", inheriting)}", inheriting is not null)
+                .Done()
             .Block(context: "csharp_class");
     }
 }

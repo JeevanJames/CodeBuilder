@@ -1,7 +1,6 @@
 ﻿// Copyright (c) 2019-23 Jeevan James
 // Licensed under the Apache License, Version 2. See LICENSE file in the project root for full license information.
 
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
@@ -11,7 +10,7 @@ namespace NCodeBuilder;
 /// <summary>
 ///     Generates code by concatenating smaller code blocks.
 ///     <para/>
-///     Similar to a <see cref="StringBuilder"/>, but with code-specific methods.
+///     Similar to a <see cref="System.Text.StringBuilder"/>, but with code-specific methods.
 /// </summary>
 [DebuggerDisplay("Code Builder for {_language.Name,nq}")]
 public sealed class CodeBuilder
@@ -46,7 +45,7 @@ public sealed class CodeBuilder
     /// <summary>
     ///     Adds a blank line.
     /// </summary>
-    public CodeBuilder __
+    public CodeBuilder _____
     {
         get
         {
@@ -503,10 +502,39 @@ public sealed class CodeBuilder
     /// </returns>
     public CodeBuilder DocComments(IEnumerable<CodeLine> comments)
     {
-        if (!_canEmit)
-            return this;
+        if (_canEmit)
+            _language.DocumentationCommentBuilder(this, comments);
+        return this;
+    }
 
-        _language.DocumentationCommentBuilder(this, comments);
+    public CodeBuilder StringBuilder(Action<StringBuilder> builderAction, bool condition)
+    {
+        if (_canEmit && condition)
+            builderAction(_builder);
+        return this;
+    }
+
+    public CodeBuilder StringBuilder(Action<StringBuilder> builderAction, Func<bool>? predicate = null)
+    {
+        if (_canEmit && (predicate is null || predicate()))
+            builderAction(_builder);
+        return this;
+    }
+
+    public CodeBuilder StringBuilder<TState>(Action<StringBuilder, TState?> builderAction, bool condition,
+        TState? state = default)
+    {
+        if (_canEmit && condition)
+            builderAction(_builder, state);
+        return this;
+    }
+
+    public CodeBuilder StringBuilder<TState>(Action<StringBuilder, TState?> builderAction,
+        Func<TState?, bool>? predicate = null,
+        TState? state = default)
+    {
+        if (_canEmit && (predicate is null || predicate(state)))
+            builderAction(_builder, state);
         return this;
     }
 
@@ -519,5 +547,5 @@ public sealed class CodeBuilder
     // As an optimization, we call string.Intern to ensure that the same string instances are
     // used for the same indentation levels. This is because new string() creates a separate
     // instance of the same indent string.
-    private string GetIndent() => string.Intern(new string(' ', _indentLevel * _language.IndentSize));
+    public string GetIndent() => string.Intern(new string(' ', _indentLevel * _language.IndentSize));
 }
