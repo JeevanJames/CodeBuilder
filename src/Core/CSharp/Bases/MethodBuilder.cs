@@ -1,4 +1,7 @@
-﻿namespace NCodeBuilder.CSharp.Bases;
+﻿// Copyright (c) 2019-23 Jeevan James
+// Licensed under the Apache License, Version 2. See LICENSE file in the project root for full license information.
+
+namespace NCodeBuilder.CSharp.Bases;
 
 public abstract class MethodBuilder<TSelf> : MemberBuilder<TSelf>
     where TSelf : MethodBuilder<TSelf>
@@ -40,7 +43,7 @@ public abstract class MethodBuilder<TSelf> : MemberBuilder<TSelf>
 
     protected void BuildCoreSignature(InlineCodeBuilder cb)
     {
-        cb._(ReturnType)._(" ")._(Name)._("(")
+        cb._(ReturnType).__._(Name)._("(")
             .Repeat(Parameters ?? [], static (icb, state) => icb
                 ._($"{state.Item.Modifier.ToString().ToLowerInvariant()} ", state.Item.Modifier.HasValue)
                 ._(state.Item.Type)

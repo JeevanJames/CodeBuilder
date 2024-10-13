@@ -84,8 +84,8 @@ public sealed class ClassBuilder : TypeBuilder<ClassBuilder>
         }
 
         return Builder
-            .Inline(AccessibilityStr)
-                ._(" ")
+            .Inline(VisibilityStr)
+                .__
                 ._("static ", _static)
                 ._("abstract ", _abstract)
                 ._("sealed ", _sealed)

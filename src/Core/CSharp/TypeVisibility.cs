@@ -3,8 +3,9 @@
 
 namespace NCodeBuilder.CSharp;
 
-public enum TopLevelAccessibility
+public enum TypeVisibility
 {
     Public,
     Internal,
+    Private,
 }

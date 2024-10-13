@@ -13,17 +13,22 @@ public abstract class TypeBuilder<TSelf> : InnerBuilder
 
     protected string TypeName { get; }
 
-    protected TopLevelAccessibility Accessibility { get; set; } = TopLevelAccessibility.Public;
+    protected TypeVisibility Visibility { get; set; } = TypeVisibility.Public;
 
     public TSelf Public
     {
-        get { Accessibility = TopLevelAccessibility.Public; return (TSelf)this; }
+        get { Visibility = TypeVisibility.Public; return (TSelf)this; }
     }
 
     public TSelf Internal
     {
-        get { Accessibility = TopLevelAccessibility.Internal; return (TSelf)this; }
+        get { Visibility = TypeVisibility.Internal; return (TSelf)this; }
     }
 
-    protected string AccessibilityStr => Accessibility.ToString().ToLowerInvariant();
+    public TSelf Private
+    {
+        get { Visibility = TypeVisibility.Private; return (TSelf)this; }
+    }
+
+    protected string VisibilityStr => Visibility.ToString().ToLowerInvariant();
 }
