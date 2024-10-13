@@ -3,6 +3,9 @@
 
 namespace NCodeBuilder.CSharp;
 
+/// <summary>
+///     Visibility of a class or struct's member.
+/// </summary>
 public enum MemberVisibility
 {
     Public,

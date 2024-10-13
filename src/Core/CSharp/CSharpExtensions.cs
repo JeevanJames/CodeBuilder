@@ -1,16 +1,22 @@
 ﻿// Copyright (c) 2019-23 Jeevan James
 // Licensed under the Apache License, Version 2. See LICENSE file in the project root for full license information.
 
-// ReSharper disable ArrangeMethodOrOperatorBody
-
-using System.Runtime.CompilerServices;
-
 using NCodeBuilder.CSharp.Builders;
 
 namespace NCodeBuilder.CSharp;
 
+/// <summary>
+///     Extension methods on <see cref="CodeBuilder"/> to build C# language code in a strongly-typed
+///     fluent manner.
+/// </summary>
 public static class CSharpExtensions
 {
+    /// <summary>
+    ///     Adds a <c>using</c> statement to import a namespace.
+    /// </summary>
+    /// <param name="cb">The <see cref="CodeBuilder"/> instance.</param>
+    /// <param name="ns">The namespace to import.</param>
+    /// <returns>The same instance of the <see cref="CodeBuilder"/>.</returns>
     public static CodeBuilder Using(this CodeBuilder cb, string ns) =>
         cb._($"using {ns};");
 

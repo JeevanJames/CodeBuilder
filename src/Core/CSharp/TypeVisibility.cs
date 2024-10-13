@@ -3,6 +3,9 @@
 
 namespace NCodeBuilder.CSharp;
 
+/// <summary>
+///     Visibility of types such as classes, structs, enums, records, interfaces, etc.
+/// </summary>
 public enum TypeVisibility
 {
     Public,

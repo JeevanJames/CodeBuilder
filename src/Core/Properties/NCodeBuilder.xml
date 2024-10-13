@@ -365,6 +365,30 @@
                 collection.
             </summary>
         </member>
+        <member name="T:NCodeBuilder.CSharp.CSharpExtensions">
+            <summary>
+                Extension methods on <see cref="T:NCodeBuilder.CodeBuilder"/> to build C# language code in a strongly-typed
+                fluent manner.
+            </summary>
+        </member>
+        <member name="M:NCodeBuilder.CSharp.CSharpExtensions.Using(NCodeBuilder.CodeBuilder,System.String)">
+            <summary>
+                Adds a <c>using</c> statement to import a namespace.
+            </summary>
+            <param name="cb">The <see cref="T:NCodeBuilder.CodeBuilder"/> instance.</param>
+            <param name="ns">The namespace to import.</param>
+            <returns>The same instance of the <see cref="T:NCodeBuilder.CodeBuilder"/>.</returns>
+        </member>
+        <member name="T:NCodeBuilder.CSharp.MemberVisibility">
+            <summary>
+                Visibility of a class or struct's member.
+            </summary>
+        </member>
+        <member name="T:NCodeBuilder.CSharp.TypeVisibility">
+            <summary>
+                Visibility of types such as classes, structs, enums, records, interfaces, etc.
+            </summary>
+        </member>
         <member name="T:NCodeBuilder.InnerBuilder">
             <summary>
                 Base class for inner builder classes - which construct well known statements in a strongly-typed
