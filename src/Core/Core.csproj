@@ -21,7 +21,7 @@
         <Authors>Jeevan James</Authors>
         <Company>Jeevan James</Company>
         <Description>Fluent code generation framework for .NET</Description>
-        <Copyright>Copyright (c) 2019-20 Jeevan James</Copyright>
+        <Copyright>Copyright (c) 2019-2024 Jeevan James</Copyright>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/JeevanJames/CodeBuilder</PackageProjectUrl>
         <RepositoryUrl>https://github.com/JeevanJames/CodeBuilder.git</RepositoryUrl>
@@ -37,8 +37,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DefaultDocumentation" Version="0.6.12" PrivateAssets="all" />
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="all" />
+        <PackageReference Include="DefaultDocumentation" Version="0.8.2" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" />
         <PackageReference Include="System.CodeDom" Version="8.0.0" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
     </ItemGroup>
 
