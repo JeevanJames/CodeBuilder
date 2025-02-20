@@ -5,6 +5,7 @@
 | Classes | |
 | :--- | :--- |
 | [CodeBuilder](NCodeBuilder.CodeBuilder.md 'NCodeBuilder.CodeBuilder') | Generates code by concatenating smaller code blocks.<br/>Similar to a [System.Text.StringBuilder](https://docs.microsoft.com/en-us/dotnet/api/System.Text.StringBuilder 'System.Text.StringBuilder'), but with code-specific methods. |
+| [Condition](NCodeBuilder.Condition.md 'NCodeBuilder.Condition') | Represents a boolean condition, either as a boolean value or condition, or a predicate delegate. |
 | [InnerBuilder](NCodeBuilder.InnerBuilder.md 'NCodeBuilder.InnerBuilder') | Base class for inner builder classes - which construct well known statements in a strongly-typed<br/>manner. |
 | [LanguageProvider](NCodeBuilder.LanguageProvider.md 'NCodeBuilder.LanguageProvider') | Provides language-specific enhancements to the [CodeBuilder](NCodeBuilder.CodeBuilder.md 'NCodeBuilder.CodeBuilder'). This includes<br/>default indentation size, support for various kinds of comments (single-line, multi-line and<br/>documentation comments) and code blocks. |
 

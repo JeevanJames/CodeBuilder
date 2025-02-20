@@ -99,12 +99,16 @@ public sealed class CodeBuilder
     ///     This can either be a <see cref="string"/> or a factory delegate
     ///     (<see cref="CodeFactory"/>) that returns a string.
     /// </param>
+    /// <param name="condition">Condition that determines whether to add the line.</param>
     /// <returns>
     ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
     /// </returns>
-    public CodeBuilder _(CodeLine code)
+    public CodeBuilder _(CodeLine code, Condition? condition = null)
     {
         if (!_canEmit)
+            return this;
+
+        if (condition is not null && !condition.Evaluate())
             return this;
 
         string? line = code.ToString();
@@ -114,54 +118,29 @@ public sealed class CodeBuilder
         if (_indentLevel > 0)
             _builder.Append(GetIndent());
         _builder.AppendLine(code.ToString());
+
         return this;
     }
 
-    /// <summary>
-    ///     Adds a line of <paramref name="code"/> if the specified <paramref name="predicate"/> is
-    ///     <c>true</c>.
-    /// </summary>
-    /// <param name="code">
-    ///     The code line to add.
-    ///     <para/>
-    ///     This can either be a <see cref="string"/> or a factory delegate
-    ///     (<see cref="CodeFactory"/>) that returns a string.
-    /// </param>
-    /// <param name="predicate">The predicate to test.</param>
-    /// <returns>
-    ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
-    /// </returns>
-    public CodeBuilder _(CodeLine code, Func<bool> predicate)
+    public CodeBuilder _(Condition? condition = null)
     {
         if (!_canEmit)
             return this;
 
-        if (predicate())
-            _(code);
+        if (condition is not null && !condition.Evaluate())
+            return this;
+
+        _builder.AppendLine();
+
         return this;
     }
 
-    /// <summary>
-    ///     Adds a line of <paramref name="code"/> if the specified <paramref name="condition"/> is
-    ///     <c>true</c>.
-    /// </summary>
-    /// <param name="code">
-    ///     The code line to add.
-    ///     <para/>
-    ///     This can either be a <see cref="string"/> or a factory delegate
-    ///     (<see cref="CodeFactory"/>) that returns a string.
-    /// </param>
-    /// <param name="condition">The condition to test.</param>
-    /// <returns>
-    ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
-    /// </returns>
-    public CodeBuilder _(CodeLine code, bool condition)
+    public CodeBuilder __(CodeLine code, Condition? condition = null)
     {
         if (!_canEmit)
             return this;
-
-        if (condition)
-            _(code);
+        if (condition is null || condition.Evaluate())
+            return Indent._(code).Unindent;
         return this;
     }
 
@@ -389,7 +368,26 @@ public sealed class CodeBuilder
             generator.Invoke(this, args);
 
         return this;
+    }
 
+    public CodeBuilder Generate(Condition condition,
+        Action<CodeBuilder> trueGenerator,
+        Action<CodeBuilder>? falseGenerator = null)
+    {
+        if (condition is null)
+            throw new ArgumentNullException(nameof(condition));
+        if (trueGenerator is null)
+            throw new ArgumentNullException(nameof(trueGenerator));
+
+        if (!_canEmit)
+            return this;
+
+        if (condition.Evaluate())
+            trueGenerator.Invoke(this);
+        else if (falseGenerator is not null)
+            falseGenerator.Invoke(this);
+
+        return this;
     }
 
     public CodeBuilder Comment(CodeFactory comment)

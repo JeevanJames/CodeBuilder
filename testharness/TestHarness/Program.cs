@@ -56,6 +56,8 @@ internal static class Program
                         "Does not return anything")
                     .Method("DoSomething").Internal.Static.Returns<int>()
                         .Parameter<string>("name", nullable: true, modifier: MethodParameterModifier.Out)._
+                        ._("if (name is null)")
+                            .__("throw new ArgumentNullException(nameof(name));", DateTime.Now.Second % 2 == 0)
                         .Try()
                             .Inline("//TODO: ")
                                 ._("This is a sample TODO")
