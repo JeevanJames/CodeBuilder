@@ -6,16 +6,16 @@ using System.Diagnostics;
 namespace NCodeBuilder;
 
 /// <summary>
-///     Provides language-specific enhancements to the <see cref="CodeBuilder"/>. This includes
-///     default indentation size, support for various kinds of comments (single-line, multi-line and
-///     documentation comments) and code blocks.
+///     Provides language-specific enhancements to the <see cref="CodeBuilder"/>. This includes default
+///     indentation size, support for various kinds of comments (single-line, multi-line and documentation
+///     comments) and code blocks.
 /// </summary>
 [DebuggerDisplay("Language provider for {Name,nq}")]
 public partial record LanguageProvider
 {
     /// <summary>
-    ///     Initializes a new instance of the <see cref="LanguageProvider"/> class with the
-    ///     specified <paramref name="name"/>.
+    ///     Initializes a new instance of the <see cref="LanguageProvider"/> class with the specified
+    ///     <paramref name="name"/>.
     /// </summary>
     /// <param name="name">The name of the language supported by this provider.</param>
     public LanguageProvider(string name)

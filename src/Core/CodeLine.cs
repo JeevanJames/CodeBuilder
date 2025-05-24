@@ -4,8 +4,8 @@
 namespace NCodeBuilder;
 
 /// <summary>
-///     Represents a line of code, either as a string value or a factory that dynamically creates
-///     the code.
+///     Represents a line of code, either as a string value or a factory that dynamically creates the
+///     code line.
 /// </summary>
 public readonly struct CodeLine
 {
