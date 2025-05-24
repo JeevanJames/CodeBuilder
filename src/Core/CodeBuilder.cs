@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019-23 Jeevan James
+﻿// Copyright (c) 2019-25 Jeevan James
 // Licensed under the Apache License, Version 2. See LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
@@ -12,11 +12,22 @@ namespace NCodeBuilder;
 ///     <para/>
 ///     Similar to a <see cref="System.Text.StringBuilder"/>, but with code-specific methods.
 /// </summary>
+/// <remarks>
+///     Initializes an instance of the <see cref="CodeBuilder"/> class with the specific
+///     <paramref name="language"/> provider.
+/// </remarks>
+/// <param name="language">
+///     A <see cref="LanguageProvider"/> that provides language-specific code generation
+///     enhancements.
+///     <para/>
+///     If not specified, then the <see cref="LanguageProvider.NoLanguage"/> provider is used,
+///     which does not provide any language enhancements.
+/// </param>
 [DebuggerDisplay("Code Builder for {_language.Name,nq}")]
-public sealed class CodeBuilder
+public sealed class CodeBuilder(LanguageProvider? language = null)
 {
     private readonly StringBuilder _builder = new();
-    private readonly LanguageProvider _language;
+    private readonly LanguageProvider _language = language ?? LanguageProvider.NoLanguage;
     private readonly Stack<string?> _blockStack = new();
     private readonly Stack<bool> _sectionStack = new();
 
@@ -25,22 +36,6 @@ public sealed class CodeBuilder
     private bool _canEmit = true;
 
     private int _indentLevel;
-
-    /// <summary>
-    ///     Initializes an instance of the <see cref="CodeBuilder"/> class with the specific
-    ///     <paramref name="language"/> provider.
-    /// </summary>
-    /// <param name="language">
-    ///     A <see cref="LanguageProvider"/> that provides language-specific code generation
-    ///     enhancements.
-    ///     <para/>
-    ///     If not specified, then the <see cref="LanguageProvider.NoLanguage"/> provider is used,
-    ///     which does not provide any language enhancements.
-    /// </param>
-    public CodeBuilder(LanguageProvider? language = null)
-    {
-        _language = language ?? LanguageProvider.NoLanguage;
-    }
 
     /// <summary>
     ///     Adds a blank line.
@@ -103,12 +98,12 @@ public sealed class CodeBuilder
     /// <returns>
     ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
     /// </returns>
-    public CodeBuilder _(CodeLine code, Condition? condition = null)
+    public CodeBuilder _(CodeLine code, Condition condition = default)
     {
         if (!_canEmit)
             return this;
 
-        if (condition is not null && !condition.Evaluate())
+        if (!condition.Evaluate())
             return this;
 
         string? line = code.ToString();
@@ -122,12 +117,25 @@ public sealed class CodeBuilder
         return this;
     }
 
-    public CodeBuilder _(Condition? condition = null)
+    /// <summary>
+    ///     Adds a new line to the code being built, optionally based on a condition.
+    /// </summary>
+    /// <remarks>
+    ///     If the builder is not in a state where it can emit code, no action is taken, and the current
+    ///     instance is returned.
+    /// </remarks>
+    /// <param name="condition">
+    ///     An optional condition that determines whether the new line should be added.  If <see langword="null"/>,
+    ///     the new line is always added. If provided, the new line is added only if the condition evaluates to
+    ///     <see langword="true"/>.
+    /// </param>
+    /// <returns>The current <see cref="CodeBuilder"/> instance, allowing for method chaining.</returns>
+    public CodeBuilder _(Condition condition = default)
     {
         if (!_canEmit)
             return this;
 
-        if (condition is not null && !condition.Evaluate())
+        if (!condition.Evaluate())
             return this;
 
         _builder.AppendLine();
@@ -135,20 +143,35 @@ public sealed class CodeBuilder
         return this;
     }
 
-    public CodeBuilder __(CodeLine code, Condition? condition = null)
+    /// <summary>
+    ///     Appends a line of code to the builder, optionally based on a condition.
+    /// </summary>
+    /// <remarks>
+    ///     If the condition is provided and evaluates to <see langword="false"/>, the code line is not
+    ///     appended.
+    /// </remarks>
+    /// <param name="code">The line of code to append.</param>
+    /// <param name="condition">
+    ///     An optional condition that determines whether the code line should be appended.  If <see langword="null"/>,
+    ///     the  code line is always appended.
+    /// </param>
+    /// <returns>The current <see cref="CodeBuilder"/> instance, allowing for method chaining.</returns>
+    public CodeBuilder __(CodeLine code, Condition condition = default)
     {
         if (!_canEmit)
             return this;
-        if (condition is null || condition.Evaluate())
+        if (condition.Evaluate())
             return Indent._(code).Unindent;
         return this;
     }
 
+    /// <summary>
+    ///     Creates a new <see cref="InlineCodeBuilder"/> instance for constructing inline code elements.
+    /// </summary>
+    /// <returns>An <see cref="InlineCodeBuilder"/> initialized with the current context.</returns>
     public InlineCodeBuilder Inline() => new(this);
 
-    public InlineCodeBuilder Inline(string str, bool condition = true) => new(this, str, condition);
-
-    public InlineCodeBuilder Inline(string str, Func<bool> predicate) => new(this, str, predicate);
+    public InlineCodeBuilder Inline(string str, Condition condition = default) => new(this, str, condition);
 
     /// <summary>
     ///     Iterates over a <paramref name="collection"/> and executes the specified
@@ -294,32 +317,15 @@ public sealed class CodeBuilder
     /// <returns>
     ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
     /// </returns>
-    public CodeBuilder Section(bool condition)
+    public CodeBuilder Section(Condition condition)
     {
-        _sectionStack.Push(condition);
+        _sectionStack.Push(condition.Evaluate());
         _canEmit = _sectionStack.All(s => s);
         return this;
     }
 
     /// <summary>
-    ///     Starts a conditional section, where all subsequent code is generated only if the
-    ///     specified <paramref name="predicate"/> delegate returns <c>true</c>, until the
-    ///     <see cref="EndSection"/> method is called.
-    /// </summary>
-    /// <param name="predicate">The predicate to check.</param>
-    /// <returns>
-    ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
-    /// </returns>
-    public CodeBuilder Section(Func<bool> predicate)
-    {
-        _sectionStack.Push(predicate());
-        _canEmit = _sectionStack.All(s => s);
-        return this;
-    }
-
-    /// <summary>
-    ///     Ends a condition section started with the <see cref="Section(bool)"/> or
-    ///     <see cref="Section(Func{bool})"/> methods.
+    ///     Ends a condition section started with the <see cref="Section(Condition)"/> method.
     /// </summary>
     /// <returns>
     ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
@@ -342,7 +348,7 @@ public sealed class CodeBuilder
     /// <returns>
     ///     An instance of the same <see cref="CodeBuilder"/>, so that calls can be chained.
     /// </returns>
-    public CodeBuilder Generate(Action<CodeBuilder> generator, bool condition = true)
+    public CodeBuilder Generate(Action<CodeBuilder> generator, Condition condition = default)
     {
         if (generator is null)
             throw new ArgumentNullException(nameof(generator));
@@ -350,13 +356,13 @@ public sealed class CodeBuilder
         if (!_canEmit)
             return this;
 
-        if (condition)
+        if (condition.Evaluate())
             generator.Invoke(this);
 
         return this;
     }
 
-    public CodeBuilder Generate<T>(Action<CodeBuilder, T> generator, T args, bool condition = true)
+    public CodeBuilder Generate<T>(Action<CodeBuilder, T> generator, T args, Condition condition = default)
     {
         if (generator is null)
             throw new ArgumentNullException(nameof(generator));
@@ -364,7 +370,7 @@ public sealed class CodeBuilder
         if (!_canEmit)
             return this;
 
-        if (condition)
+        if (condition.Evaluate())
             generator.Invoke(this, args);
 
         return this;
@@ -374,8 +380,6 @@ public sealed class CodeBuilder
         Action<CodeBuilder> trueGenerator,
         Action<CodeBuilder>? falseGenerator = null)
     {
-        if (condition is null)
-            throw new ArgumentNullException(nameof(condition));
         if (trueGenerator is null)
             throw new ArgumentNullException(nameof(trueGenerator));
 
@@ -505,33 +509,17 @@ public sealed class CodeBuilder
         return this;
     }
 
-    public CodeBuilder StringBuilder(Action<StringBuilder> builderAction, bool condition)
+    public CodeBuilder StringBuilder(Action<StringBuilder> builderAction, Condition condition = default)
     {
-        if (_canEmit && condition)
+        if (_canEmit && condition.Evaluate())
             builderAction(_builder);
-        return this;
-    }
-
-    public CodeBuilder StringBuilder(Action<StringBuilder> builderAction, Func<bool>? predicate = null)
-    {
-        if (_canEmit && (predicate is null || predicate()))
-            builderAction(_builder);
-        return this;
-    }
-
-    public CodeBuilder StringBuilder<TState>(Action<StringBuilder, TState?> builderAction, bool condition,
-        TState? state = default)
-    {
-        if (_canEmit && condition)
-            builderAction(_builder, state);
         return this;
     }
 
     public CodeBuilder StringBuilder<TState>(Action<StringBuilder, TState?> builderAction,
-        Func<TState?, bool>? predicate = null,
-        TState? state = default)
+        Condition condition = default, TState? state = default)
     {
-        if (_canEmit && (predicate is null || predicate(state)))
+        if (_canEmit && condition.Evaluate())
             builderAction(_builder, state);
         return this;
     }

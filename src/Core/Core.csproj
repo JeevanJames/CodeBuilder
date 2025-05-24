@@ -21,7 +21,7 @@
         <Authors>Jeevan James</Authors>
         <Company>Jeevan James</Company>
         <Description>Fluent code generation framework for .NET</Description>
-        <Copyright>Copyright (c) 2019-2024 Jeevan James</Copyright>
+        <Copyright>Copyright (c) 2019-2025 Jeevan James</Copyright>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/JeevanJames/CodeBuilder</PackageProjectUrl>
         <RepositoryUrl>https://github.com/JeevanJames/CodeBuilder.git</RepositoryUrl>

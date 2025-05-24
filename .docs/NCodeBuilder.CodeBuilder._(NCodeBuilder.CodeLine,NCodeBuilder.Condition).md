@@ -6,7 +6,7 @@
 Adds a line of [code](NCodeBuilder.CodeBuilder._(NCodeBuilder.CodeLine,NCodeBuilder.Condition).md#NCodeBuilder.CodeBuilder._(NCodeBuilder.CodeLine,NCodeBuilder.Condition).code 'NCodeBuilder.CodeBuilder._(NCodeBuilder.CodeLine, NCodeBuilder.Condition).code'). If the code is `null`, nothing is added.
 
 ```csharp
-public NCodeBuilder.CodeBuilder _(NCodeBuilder.CodeLine code, NCodeBuilder.Condition? condition=null);
+public NCodeBuilder.CodeBuilder _(NCodeBuilder.CodeLine code, NCodeBuilder.Condition condition=default(NCodeBuilder.Condition));
 ```
 #### Parameters
 

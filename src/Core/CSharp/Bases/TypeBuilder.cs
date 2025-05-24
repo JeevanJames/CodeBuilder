@@ -1,17 +1,15 @@
-﻿// Copyright (c) 2019-23 Jeevan James
+﻿// Copyright (c) 2019-25 Jeevan James
 // Licensed under the Apache License, Version 2. See LICENSE file in the project root for full license information.
 
 namespace NCodeBuilder.CSharp.Bases;
 
-public abstract class TypeBuilder<TSelf> : InnerBuilder
+public abstract class TypeBuilder<TSelf>(CodeBuilder builder, string typeName) : InnerBuilder(builder)
     where TSelf : TypeBuilder<TSelf>
 {
-    protected TypeBuilder(CodeBuilder builder, string typeName) : base(builder)
-    {
-        TypeName = typeName;
-    }
-
-    protected string TypeName { get; }
+    /// <summary>
+    ///     The name of the C# type.
+    /// </summary>
+    protected string TypeName { get; } = typeName;
 
     protected TypeVisibility Visibility { get; set; } = TypeVisibility.Public;
 

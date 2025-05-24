@@ -1,11 +1,11 @@
-﻿// Copyright (c) 2019-23 Jeevan James
+﻿// Copyright (c) 2019-25 Jeevan James
 // Licensed under the Apache License, Version 2. See LICENSE file in the project root for full license information.
 
 using NCodeBuilder.CSharp.Bases;
 
 namespace NCodeBuilder.CSharp.Builders;
 
-public sealed class ClassBuilder : TypeBuilder<ClassBuilder>
+public sealed class ClassBuilder(CodeBuilder builder, string className) : TypeBuilder<ClassBuilder>(builder, className)
 {
     private bool _static;
     private bool _abstract;
@@ -13,10 +13,6 @@ public sealed class ClassBuilder : TypeBuilder<ClassBuilder>
     private bool _partial;
     private string? _baseClassName;
     private List<string>? _interfaces;
-
-    public ClassBuilder(CodeBuilder builder, string className) : base(builder, className)
-    {
-    }
 
     public ClassBuilder Static
     {
@@ -53,7 +49,7 @@ public sealed class ClassBuilder : TypeBuilder<ClassBuilder>
 
     public ClassBuilder Implements(params string[] interfaces)
     {
-        _interfaces ??= new List<string>();
+        _interfaces ??= [];
         _interfaces.AddRange(interfaces);
         return this;
     }

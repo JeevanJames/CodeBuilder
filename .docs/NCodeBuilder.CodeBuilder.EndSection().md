@@ -3,8 +3,7 @@
 
 ## CodeBuilder.EndSection() Method
 
-Ends a condition section started with the [Section(bool)](NCodeBuilder.CodeBuilder.Section(bool).md 'NCodeBuilder.CodeBuilder.Section(bool)') or  
-[Section(Func&lt;bool&gt;)](NCodeBuilder.CodeBuilder.Section(System.Func_bool_).md 'NCodeBuilder.CodeBuilder.Section(System.Func<bool>)') methods.
+Ends a condition section started with the [Section(Condition)](NCodeBuilder.CodeBuilder.Section(NCodeBuilder.Condition).md 'NCodeBuilder.CodeBuilder.Section(NCodeBuilder.Condition)') method.
 
 ```csharp
 public NCodeBuilder.CodeBuilder EndSection();

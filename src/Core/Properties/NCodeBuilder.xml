@@ -15,12 +15,28 @@
                 <para/>
                 Similar to a <see cref="T:System.Text.StringBuilder"/>, but with code-specific methods.
             </summary>
+            <remarks>
+                Initializes an instance of the <see cref="T:NCodeBuilder.CodeBuilder"/> class with the specific
+                <paramref name="language"/> provider.
+            </remarks>
+            <param name="language">
+                A <see cref="T:NCodeBuilder.LanguageProvider"/> that provides language-specific code generation
+                enhancements.
+                <para/>
+                If not specified, then the <see cref="F:NCodeBuilder.LanguageProvider.NoLanguage"/> provider is used,
+                which does not provide any language enhancements.
+            </param>
         </member>
         <member name="M:NCodeBuilder.CodeBuilder.#ctor(NCodeBuilder.LanguageProvider)">
             <summary>
+                Generates code by concatenating smaller code blocks.
+                <para/>
+                Similar to a <see cref="T:System.Text.StringBuilder"/>, but with code-specific methods.
+            </summary>
+            <remarks>
                 Initializes an instance of the <see cref="T:NCodeBuilder.CodeBuilder"/> class with the specific
                 <paramref name="language"/> provider.
-            </summary>
+            </remarks>
             <param name="language">
                 A <see cref="T:NCodeBuilder.LanguageProvider"/> that provides language-specific code generation
                 enhancements.
@@ -61,6 +77,42 @@
             <returns>
                 An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
             </returns>
+        </member>
+        <member name="M:NCodeBuilder.CodeBuilder._(NCodeBuilder.Condition)">
+            <summary>
+                Adds a new line to the code being built, optionally based on a condition.
+            </summary>
+            <remarks>
+                If the builder is not in a state where it can emit code, no action is taken, and the current
+                instance is returned.
+            </remarks>
+            <param name="condition">
+                An optional condition that determines whether the new line should be added.  If <see langword="null"/>,
+                the new line is always added. If provided, the new line is added only if the condition evaluates to
+                <see langword="true"/>.
+            </param>
+            <returns>The current <see cref="T:NCodeBuilder.CodeBuilder"/> instance, allowing for method chaining.</returns>
+        </member>
+        <member name="M:NCodeBuilder.CodeBuilder.__(NCodeBuilder.CodeLine,NCodeBuilder.Condition)">
+            <summary>
+                Appends a line of code to the builder, optionally based on a condition.
+            </summary>
+            <remarks>
+                If the condition is provided and evaluates to <see langword="false"/>, the code line is not
+                appended.
+            </remarks>
+            <param name="code">The line of code to append.</param>
+            <param name="condition">
+                An optional condition that determines whether the code line should be appended.  If <see langword="null"/>,
+                the  code line is always appended.
+            </param>
+            <returns>The current <see cref="T:NCodeBuilder.CodeBuilder"/> instance, allowing for method chaining.</returns>
+        </member>
+        <member name="M:NCodeBuilder.CodeBuilder.Inline">
+            <summary>
+                Creates a new <see cref="T:NCodeBuilder.InlineCodeBuilder"/> instance for constructing inline code elements.
+            </summary>
+            <returns>An <see cref="T:NCodeBuilder.InlineCodeBuilder"/> initialized with the current context.</returns>
         </member>
         <member name="M:NCodeBuilder.CodeBuilder.Repeat``1(System.Collections.Generic.IEnumerable{``0},System.Action{NCodeBuilder.CodeBuilder,NCodeBuilder.RepeatState{``0}})">
             <summary>
@@ -134,7 +186,7 @@
                 <paramref name="context"/> does not match the block's context.
             </exception>
         </member>
-        <member name="M:NCodeBuilder.CodeBuilder.Section(System.Boolean)">
+        <member name="M:NCodeBuilder.CodeBuilder.Section(NCodeBuilder.Condition)">
             <summary>
                 Starts a conditional section, where all subsequent code is generated only if the
                 specified <paramref name="condition"/> is <c>true</c>, until the
@@ -145,27 +197,15 @@
                 An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
             </returns>
         </member>
-        <member name="M:NCodeBuilder.CodeBuilder.Section(System.Func{System.Boolean})">
-            <summary>
-                Starts a conditional section, where all subsequent code is generated only if the
-                specified <paramref name="predicate"/> delegate returns <c>true</c>, until the
-                <see cref="M:NCodeBuilder.CodeBuilder.EndSection"/> method is called.
-            </summary>
-            <param name="predicate">The predicate to check.</param>
-            <returns>
-                An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
-            </returns>
-        </member>
         <member name="M:NCodeBuilder.CodeBuilder.EndSection">
             <summary>
-                Ends a condition section started with the <see cref="M:NCodeBuilder.CodeBuilder.Section(System.Boolean)"/> or
-                <see cref="M:NCodeBuilder.CodeBuilder.Section(System.Func{System.Boolean})"/> methods.
+                Ends a condition section started with the <see cref="M:NCodeBuilder.CodeBuilder.Section(NCodeBuilder.Condition)"/> method.
             </summary>
             <returns>
                 An instance of the same <see cref="T:NCodeBuilder.CodeBuilder"/>, so that calls can be chained.
             </returns>
         </member>
-        <member name="M:NCodeBuilder.CodeBuilder.Generate(System.Action{NCodeBuilder.CodeBuilder},System.Boolean)">
+        <member name="M:NCodeBuilder.CodeBuilder.Generate(System.Action{NCodeBuilder.CodeBuilder},NCodeBuilder.Condition)">
             <summary>
                 Executes the generator delegate to generate code. Useful to break the generation code
                 into separate methods.
@@ -336,7 +376,17 @@
         </member>
         <member name="T:NCodeBuilder.Condition">
             <summary>
-                Represents a boolean condition, either as a boolean value or condition, or a predicate delegate.
+                Represents a boolean condition, either as a boolean value or a predicate delegate.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.CSharp.Bases.MemberBuilder`1.Name">
+            <summary>
+                The name of the C# member.
+            </summary>
+        </member>
+        <member name="P:NCodeBuilder.CSharp.Bases.TypeBuilder`1.TypeName">
+            <summary>
+                The name of the C# type.
             </summary>
         </member>
         <member name="T:NCodeBuilder.CSharp.CSharpExtensions">
@@ -363,7 +413,23 @@
                 Visibility of types such as classes, structs, enums, records, interfaces, etc.
             </summary>
         </member>
+        <member name="T:NCodeBuilder.InlineCodeBuilder">
+            <summary>
+                Provides a fluent API for building inline code snippets with conditional and repeated content.
+            </summary>
+            <remarks>
+                This class is designed to simplify the construction of inline code by allowing conditional appending
+                of strings, repeated operations over collections, and chaining of operations. It works in conjunction
+                with the <see cref="T:NCodeBuilder.CodeBuilder"/> class to manage the underlying string construction.
+            </remarks>
+        </member>
         <member name="T:NCodeBuilder.InnerBuilder">
+            <summary>
+                Base class for inner builder classes - which construct well known statements in a strongly-typed
+                manner.
+            </summary>
+        </member>
+        <member name="M:NCodeBuilder.InnerBuilder.#ctor(NCodeBuilder.CodeBuilder)">
             <summary>
                 Base class for inner builder classes - which construct well known statements in a strongly-typed
                 manner.

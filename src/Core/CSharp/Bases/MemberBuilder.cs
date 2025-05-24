@@ -1,20 +1,18 @@
-﻿// Copyright (c) 2019-23 Jeevan James
+﻿// Copyright (c) 2019-25 Jeevan James
 // Licensed under the Apache License, Version 2. See LICENSE file in the project root for full license information.
 
 namespace NCodeBuilder.CSharp.Bases;
 
-public abstract class MemberBuilder<TSelf> : InnerBuilder
+public abstract class MemberBuilder<TSelf>(CodeBuilder builder, string name) : InnerBuilder(builder)
     where TSelf : MemberBuilder<TSelf>
 {
     protected MemberVisibility _visibility;
     protected bool _static;
 
-    protected MemberBuilder(CodeBuilder builder, string name) : base(builder)
-    {
-        Name = name;
-    }
-
-    public string Name { get; }
+    /// <summary>
+    ///     The name of the C# member.
+    /// </summary>
+    public string Name { get; } = name;
 
     protected string VisibilityKeyword => _visibility.ToString("G").ToLowerInvariant();
 

@@ -3,8 +3,8 @@
 
 ## CodeBuilder(LanguageProvider) Constructor
 
-Initializes an instance of the [CodeBuilder](NCodeBuilder.CodeBuilder.md 'NCodeBuilder.CodeBuilder') class with the specific  
-[language](NCodeBuilder.CodeBuilder.CodeBuilder(NCodeBuilder.LanguageProvider).md#NCodeBuilder.CodeBuilder.CodeBuilder(NCodeBuilder.LanguageProvider).language 'NCodeBuilder.CodeBuilder.CodeBuilder(NCodeBuilder.LanguageProvider).language') provider.
+Generates code by concatenating smaller code blocks.  
+Similar to a [System.Text.StringBuilder](https://docs.microsoft.com/en-us/dotnet/api/System.Text.StringBuilder 'System.Text.StringBuilder'), but with code-specific methods.
 
 ```csharp
 public CodeBuilder(NCodeBuilder.LanguageProvider? language=null);
@@ -19,3 +19,7 @@ A [LanguageProvider](NCodeBuilder.LanguageProvider.md 'NCodeBuilder.LanguageProv
 enhancements.  
 If not specified, then the [NoLanguage](NCodeBuilder.LanguageProvider.NoLanguage.md 'NCodeBuilder.LanguageProvider.NoLanguage') provider is used,  
 which does not provide any language enhancements.
+
+### Remarks
+Initializes an instance of the [CodeBuilder](NCodeBuilder.CodeBuilder.md 'NCodeBuilder.CodeBuilder') class with the specific  
+[language](NCodeBuilder.CodeBuilder.CodeBuilder(NCodeBuilder.LanguageProvider).md#NCodeBuilder.CodeBuilder.CodeBuilder(NCodeBuilder.LanguageProvider).language 'NCodeBuilder.CodeBuilder.CodeBuilder(NCodeBuilder.LanguageProvider).language') provider.
